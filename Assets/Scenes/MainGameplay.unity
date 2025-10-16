@@ -292,7 +292,7 @@ Transform:
   m_GameObject: {fileID: 198373660}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.5, y: 2, z: -3.5}
+  m_LocalPosition: {x: -5.54, y: 2, z: -5.61}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -311,6 +311,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 10
+  spawnPointIndex: 0
 --- !u!1 &208018854
 GameObject:
   m_ObjectHideFlags: 0
@@ -385,6 +386,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerHUD: {fileID: 1803818029}
+  soulEssencesGainPerClick: 0
+  damageToHarvestablesPerClick: 0
 --- !u!4 &489177717
 Transform:
   m_ObjectHideFlags: 0
@@ -580,8 +583,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.12059042, y: 0.37940952, z: -0.049950182, w: 0.9159757}
-  m_LocalPosition: {x: -16.19, y: 10.93, z: -16.17}
+  m_LocalRotation: {x: 0.27011627, y: 0.36596197, z: -0.11188581, w: 0.8835104}
+  m_LocalPosition: {x: -16, y: 16, z: -16}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -765,7 +768,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.5, z: 0}
-  m_LocalScale: {x: 10, y: 1, z: 10}
+  m_LocalScale: {x: 15, y: 1, z: 15}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -887,6 +890,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soulEssencesText: {fileID: 2036644993}
+  waveText: {fileID: 1980123693}
 --- !u!1 &1923570708
 GameObject:
   m_ObjectHideFlags: 0
@@ -951,14 +955,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1923570708}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.12059043, y: 0.37940952, z: -0.04995019, w: 0.9159757}
-  m_LocalPosition: {x: -16.19, y: 10.93, z: -16.17}
+  m_LocalRotation: {x: 0.27011627, y: 0.36596197, z: -0.11188581, w: 0.8835104}
+  m_LocalPosition: {x: -16, y: 16, z: -16}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 977581686}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 15, y: 45, z: 0}
+  m_LocalEulerAnglesHint: {x: 34, y: 45, z: 0}
 --- !u!1 &1980123691
 GameObject:
   m_ObjectHideFlags: 0
@@ -971,7 +975,7 @@ GameObject:
   - component: {fileID: 1980123694}
   - component: {fileID: 1980123693}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Wave Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

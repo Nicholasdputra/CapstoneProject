@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class HarvestableObject : MonoBehaviour, IClickable
@@ -10,6 +8,8 @@ public class HarvestableObject : MonoBehaviour, IClickable
         get => health;
         set => health = Mathf.Max(0, value);
     }
+
+    public Vector2Int myGridCell;
 
     private void Start()
     {
@@ -25,29 +25,33 @@ public class HarvestableObject : MonoBehaviour, IClickable
     {
         if (Health <= 0)
         {
-            OnDestroy();
+            HandleDestroy();
         }
     }
 
     public void OnClick()
     {
-        PlayerData.instance.AddSoulEssences(1);
-        Health -= 1;
+        Health -= PlayerData.instance.damageToHarvestablesPerClick;
         Debug.Log("Harvested! Current Health: " + Health);
     }
 
     public void OnHover()
     {
+        // Change sprite to a hovered one
 
     }
 
     public void OnUnhover()
     {
+        // Change back to default sprite
 
     }
     
-    public void OnDestroy()
+    public void HandleDestroy()
     {
+        GridManager.instance.SetCellOccupied(myGridCell, false);
+        WaveManager.instance.OnHarvestableDestroyed();
         Destroy(gameObject);
+        // Can add effects here too
     }
 }

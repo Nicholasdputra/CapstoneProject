@@ -4,5 +4,5 @@ public interface IClickable
     void OnHover();
     void OnUnhover();
     void OnClick();
-    void OnDestroy();
+    void HandleDestroy();
 }
