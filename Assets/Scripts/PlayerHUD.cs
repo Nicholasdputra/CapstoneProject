@@ -8,7 +8,7 @@ public class PlayerHUD : MonoBehaviour
     
     void Start()
     {
-        soulEssencesText.text = "Soul Essences: " + PlayerData.instance.SoulEssences.ToString();
-        waveText.text = "Wave: " + WaveManager.instance.CurrentWave.ToString();
+        soulEssencesText.text = PlayerData.instance.SoulEssences.ToString();
+        waveText.text = WaveManager.instance.CurrentWave.ToString() + " / " + WaveManager.WAVESPERISLAND.ToString();
     }
 }

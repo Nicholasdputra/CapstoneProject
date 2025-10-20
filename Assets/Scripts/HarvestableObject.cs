@@ -1,24 +1,20 @@
 using UnityEngine;
 
-public class HarvestableObject : MonoBehaviour, IClickable
+public class HarvestableObject : ClickableEntity, IClickable
 {
-    [SerializeField] private int health;
-    public int Health
-    {
-        get => health;
-        set => health = Mathf.Max(0, value);
-    }
-
-    public Vector2Int myGridCell;
+    bool isCorrupted;
+    int clicksToCorrupt;
+    int soulEssenceGain;
 
     private void Start()
     {
         Initialize();
     }
 
-    public void Initialize()
+    public override void Initialize()
     {
-        Health = health;
+        Health = Random.Range(4,6);
+        clicksToCorrupt = 1;
     }
 
     private void Update()
@@ -29,27 +25,44 @@ public class HarvestableObject : MonoBehaviour, IClickable
         }
     }
 
-    public void OnClick()
+    public override void OnClick()
     {
-        Health -= PlayerData.instance.damageToHarvestablesPerClick;
-        Debug.Log("Harvested! Current Health: " + Health);
+        if (isCorrupted)
+        {
+            Health -= PlayerData.instance.damageToHarvestablesPerClick;
+            Debug.Log("Clicked! Current Health: " + Health);    
+        }
+        else
+        {
+            clicksToCorrupt--;
+            Debug.Log("Corrupting... Clicks left to corrupt: " + clicksToCorrupt);
+            if (clicksToCorrupt <= 0)
+            {
+                isCorrupted = true;
+                Debug.Log("Object Corrupted! You can now harvest it.");
+            }
+        }
     }
 
     public void OnHover()
     {
         // Change sprite to a hovered one
+        Debug.Log("Hovering over Harvestable Object");
 
     }
 
     public void OnUnhover()
     {
         // Change back to default sprite
+        Debug.Log("Stopped hovering over Harvestable Object");
 
     }
     
-    public void HandleDestroy()
+    public override void HandleDestroy()
     {
         GridManager.instance.SetCellOccupied(myGridCell, false);
+        soulEssenceGain++;
+        PlayerData.instance.AddSoulEssences(1);
         WaveManager.instance.OnHarvestableDestroyed();
         Destroy(gameObject);
         // Can add effects here too

@@ -1,5 +1,6 @@
 // using System.Numerics;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class WaveManager : MonoBehaviour
 {
@@ -13,8 +14,10 @@ public class WaveManager : MonoBehaviour
     }
 
     public int harvestableObjectThisWave;
+    public int[] harvestableObjectCountsPerWave;
 
     public GameObject harvestableObjectPrefab;
+    private float spawningHeightOffset;
 
     public const int WAVESPERISLAND = 10;
 
@@ -26,6 +29,7 @@ public class WaveManager : MonoBehaviour
     }
 
     public int isInMinibossPhase;
+    public GameObject minibossPrefab;
 
     void Awake()
     {
@@ -40,20 +44,53 @@ public class WaveManager : MonoBehaviour
         }
     }
 
+    public void Start()
+    {
+        DetermineHarvestableHeightOffset();
+        
+        CheckIfShouldSpawnWave();
+
+    }
+    
+    public void DetermineHarvestableHeightOffset()
+    {
+        spawningHeightOffset = GridManager.instance.floorPlatform.transform.localScale.y;
+    }
+
+    public void CheckIfShouldSpawnWave()
+    {
+        // Scan to see if there are harvestable objects in the scene already
+        HarvestableObject[] existingObjects = FindObjectsOfType<HarvestableObject>();
+        if (existingObjects.Length > 0)
+        {
+            harvestableObjectThisWave = existingObjects.Length;
+        }
+        else
+        {
+            // Check if we're in mini boss phase, if yes, call miniboss spawn function
+            if (isInMinibossPhase == 1)
+            {
+                // Miniboss spawn function here
+                SpawnMiniboss();
+            }
+            else
+            {
+                harvestableObjectThisWave = harvestableObjectCountsPerWave[CurrentWave];
+                SpawnWave();
+            }
+        }
+    }
+
     // Spawn New Wave
     public void SpawnWave()
     {
+        Debug.Log("Spawning Wave " + (CurrentWave + 1) + " with " + harvestableObjectThisWave + " harvestable objects.");
         for (int i = 0; i < harvestableObjectThisWave; i++)
         {
-            GridManager.instance.CalculateFloorSize();
-
-            Vector3 spawnPos = GridManager.instance.GetRandomFreeTilePosition(GridManager.instance.floorXSize, GridManager.instance.floorZSize);
-            spawnPos = GridManager.instance.GetGroundY(spawnPos, 20f);
-
+            Vector3 spawnPos = GetSpawnPos();
             GameObject newObj = Instantiate(harvestableObjectPrefab, spawnPos, Quaternion.identity);
             newObj.GetComponent<HarvestableObject>().myGridCell = GridManager.instance.WorldToGrid(spawnPos);
-
-            // Mark cell as occupied
+            
             Vector2Int gridCell = GridManager.instance.WorldToGrid(spawnPos);
             GridManager.instance.SetCellOccupied(gridCell, true);
         }
@@ -62,23 +99,46 @@ public class WaveManager : MonoBehaviour
     // When a harvestable object is destroyed
     public void OnHarvestableDestroyed()
     {
+        Debug.Log("Harvestable Object Destroyed!");
+        
         DestroyedHarvestableObjectsCount++;
         if (DestroyedHarvestableObjectsCount == harvestableObjectThisWave)
         {
-            DestroyedHarvestableObjectsCount = 0;
-            CurrentWave++;
-            if (CurrentWave < WAVESPERISLAND)
-            {
-                SpawnWave();
-            }
-            else // Miniboss phase
-            {
-                isInMinibossPhase = 1; //set to true
-                CurrentWave = 0;
-                
-                // However the miniboss thingy works
-                
-            }
+            isInMinibossPhase = 1;
+            SpawnMiniboss();
         }
+    }
+
+    public void SpawnMiniboss()
+    {
+        Debug.Log("Spawning Miniboss!");
+
+        // Miniboss spawning logic here
+        Vector3 spawnPos = GetSpawnPos();
+        GameObject newObj = Instantiate(harvestableObjectPrefab, spawnPos, Quaternion.identity);
+        newObj.GetComponent<ClickableEntity>().myGridCell = GridManager.instance.WorldToGrid(spawnPos);
+        Vector2Int gridCell = GridManager.instance.WorldToGrid(spawnPos);
+        GridManager.instance.SetCellOccupied(gridCell, true);
+    }
+
+    public Vector3 GetSpawnPos()
+    {
+        GridManager.instance.CalculateFloorSize();
+
+        Vector3 spawnPos = GridManager.instance.GetRandomFreeTilePosition();
+        spawnPos = GridManager.instance.GetGroundY(spawnPos, 20f, spawningHeightOffset);
+        return spawnPos;
+    }
+    
+    public void HandleMinibossFailure()
+    {
+        Debug.Log("Miniboss Failed! Restarting Wave.");
+
+        // Reset destroyed harvestable objects count
+        DestroyedHarvestableObjectsCount = 0;
+
+        // Respawn the wave
+        isInMinibossPhase = 0;
+        SpawnWave();
     }
 }
