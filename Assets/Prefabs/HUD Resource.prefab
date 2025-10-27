@@ -145,7 +145,7 @@ GameObject:
   - component: {fileID: 6044903451608928376}
   - component: {fileID: 7258518081446455572}
   m_Layer: 5
-  m_Name: Soul Essence
+  m_Name: HUD Resource
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

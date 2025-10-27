@@ -126,6 +126,7 @@ public class PlayerData : MonoBehaviour
         - Soul Essences
         - Soul Essences Gain Per Click
         - Damage To Harvestables Per Click
+        - Damage To Miniboss Per Click
 
         - Is In Miniboss Phase or Not
         - Current Wave
@@ -137,6 +138,7 @@ public class PlayerData : MonoBehaviour
     [Header("Clicking Variables")]
     public int soulEssencesGainPerClick;
     public int damageToHarvestablesPerClick;
+    public int damageToMinibossPerClick;
 
     #region Soul Essences
     [SerializeField] private int soulEssences;
@@ -150,7 +152,7 @@ public class PlayerData : MonoBehaviour
     {
         SoulEssences += amount;
         // SaveData();
-        playerHUD.soulEssencesText.text = "Soul Essences: " + SoulEssences.ToString();
+        playerHUD.soulEssencesText.text = SoulEssences.ToString();
     }
 
     // Check if the player has enough Soul Essences before spending
@@ -159,7 +161,7 @@ public class PlayerData : MonoBehaviour
         if (SoulEssences >= amount)
         {
             SoulEssences -= amount;
-            playerHUD.soulEssencesText.text = "Soul Essences: " + SoulEssences.ToString();
+            playerHUD.soulEssencesText.text = SoulEssences.ToString();
             // SaveData();
             return true;
         }
@@ -169,6 +171,70 @@ public class PlayerData : MonoBehaviour
         }
     }
     #endregion
+
+    # region
+    [SerializeField] private int dreamEssences;
+    public int DreamEssences
+    {
+        get => dreamEssences;
+        set => dreamEssences = Mathf.Max(0, value);
+    }
+
+    public void AddDreamEssences(int amount)
+    {
+        DreamEssences += amount;
+        // SaveData();
+        playerHUD.dreamEssencesText.text = DreamEssences.ToString();
+    }
+
+    // Check if the player has enough Soul Essences before spending
+    public bool SpendDreamEssences(int amount)
+    {
+        if (DreamEssences >= amount)
+        {
+            DreamEssences -= amount;
+            playerHUD.soulEssencesText.text = DreamEssences.ToString();
+            // SaveData();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    # endregion
+
+    # region
+    [SerializeField] private int humanSouls;
+    public int HumanSouls
+    {
+        get => humanSouls;
+        set => humanSouls = Mathf.Max(0, value);
+    }
+
+    public void AddHumanSouls(int amount)
+    {
+        HumanSouls += amount;
+        // SaveData();
+        playerHUD.humanSoulText.text = HumanSouls.ToString();
+    }
+
+    // Check if the player has enough Soul Essences before spending
+    public bool SpendHumanSouls(int amount)
+    {
+        if (HumanSouls >= amount)
+        {
+            HumanSouls -= amount;
+            playerHUD.soulEssencesText.text = HumanSouls.ToString();
+            // SaveData();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    # endregion
 
 //     [ContextMenu("Clear All Data")]
 //     public void ClearAllData()

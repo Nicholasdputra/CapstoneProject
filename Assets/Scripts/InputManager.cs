@@ -26,6 +26,7 @@ public class InputManager : MonoBehaviour
 
             foreach (RaycastHit hit in hits) //Then check if any of the objects are clickable
             {
+                // Debug.Log("Ray hit: " + hit.collider.name);
                 IClickable clickable = hit.collider.GetComponent<IClickable>();
 
                 if (clickable != null) // if yes, set it to newly hovered object
@@ -69,6 +70,7 @@ public class InputManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && currentlyHovered != null)
         {
+            // Debug.Log("Clicked on: " + ((MonoBehaviour)currentlyHovered).name);
             currentlyHovered.OnClick();
         }
     }

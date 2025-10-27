@@ -4,7 +4,7 @@ public class HarvestableObject : ClickableEntity, IClickable
 {
     bool isCorrupted;
     int clicksToCorrupt;
-    int soulEssenceGain;
+    int dreamEssenceGain;
 
     private void Start()
     {
@@ -13,13 +13,18 @@ public class HarvestableObject : ClickableEntity, IClickable
 
     public override void Initialize()
     {
-        Health = Random.Range(4,6);
+        Debug.Log("Initializing Harvestable Object");
+        isClickable = true;
+        isCorrupted = false;
+        CurrentHealth = Random.Range(4,6);
         clicksToCorrupt = 1;
+        dreamEssenceGain = 1;
+        MaxHealth = CurrentHealth;
     }
 
     private void Update()
     {
-        if (Health <= 0)
+        if (CurrentHealth <= 0)
         {
             HandleDestroy();
         }
@@ -27,10 +32,16 @@ public class HarvestableObject : ClickableEntity, IClickable
 
     public override void OnClick()
     {
+        if (!isClickable)
+        {
+            Debug.Log("Harvestable Object is not clickable right now.");
+            return;
+        }
+
         if (isCorrupted)
         {
-            Health -= PlayerData.instance.damageToHarvestablesPerClick;
-            Debug.Log("Clicked! Current Health: " + Health);    
+            CurrentHealth -= PlayerData.instance.damageToHarvestablesPerClick;
+            Debug.Log("Clicked! Current Health: " + CurrentHealth);    
         }
         else
         {
@@ -55,14 +66,12 @@ public class HarvestableObject : ClickableEntity, IClickable
     {
         // Change back to default sprite
         Debug.Log("Stopped hovering over Harvestable Object");
-
     }
     
     public override void HandleDestroy()
     {
         GridManager.instance.SetCellOccupied(myGridCell, false);
-        soulEssenceGain++;
-        PlayerData.instance.AddSoulEssences(1);
+        PlayerData.instance.AddDreamEssences(dreamEssenceGain);
         WaveManager.instance.OnHarvestableDestroyed();
         Destroy(gameObject);
         // Can add effects here too

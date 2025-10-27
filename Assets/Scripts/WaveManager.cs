@@ -1,12 +1,10 @@
-// using System.Numerics;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class WaveManager : MonoBehaviour
 {
     public static WaveManager instance;
 
-    private int destroyedHarvestableObjectsCount = 0;
+    [SerializeField] private int destroyedHarvestableObjectsCount = 0;
     public int DestroyedHarvestableObjectsCount
     {
         get => destroyedHarvestableObjectsCount;
@@ -17,7 +15,7 @@ public class WaveManager : MonoBehaviour
     public int[] harvestableObjectCountsPerWave;
 
     public GameObject harvestableObjectPrefab;
-    private float spawningHeightOffset;
+    public float spawningHeightOffset;
 
     public const int WAVESPERISLAND = 10;
 
@@ -29,7 +27,7 @@ public class WaveManager : MonoBehaviour
     }
 
     public int isInMinibossPhase;
-    public GameObject minibossPrefab;
+    [SerializeField] public GameObject minibossPrefab;
 
     void Awake()
     {
@@ -67,6 +65,17 @@ public class WaveManager : MonoBehaviour
         }
         else
         {
+            //Check to see if there's a miniboss in scene
+            if (FindObjectOfType<MiniBossScript>() != null)
+            {
+                isInMinibossPhase = 1;
+                return;
+            }
+            else
+            {
+                isInMinibossPhase = 0;
+            }
+
             // Check if we're in mini boss phase, if yes, call miniboss spawn function
             if (isInMinibossPhase == 1)
             {
@@ -76,6 +85,7 @@ public class WaveManager : MonoBehaviour
             else
             {
                 harvestableObjectThisWave = harvestableObjectCountsPerWave[CurrentWave];
+                Debug.Log("Spawning Wave " + (CurrentWave + 1) + " with " + harvestableObjectThisWave + " harvestable objects.");
                 SpawnWave();
             }
         }
@@ -84,6 +94,7 @@ public class WaveManager : MonoBehaviour
     // Spawn New Wave
     public void SpawnWave()
     {
+        harvestableObjectThisWave = harvestableObjectCountsPerWave[CurrentWave];
         Debug.Log("Spawning Wave " + (CurrentWave + 1) + " with " + harvestableObjectThisWave + " harvestable objects.");
         for (int i = 0; i < harvestableObjectThisWave; i++)
         {
@@ -115,7 +126,7 @@ public class WaveManager : MonoBehaviour
 
         // Miniboss spawning logic here
         Vector3 spawnPos = GetSpawnPos();
-        GameObject newObj = Instantiate(harvestableObjectPrefab, spawnPos, Quaternion.identity);
+        GameObject newObj = Instantiate(minibossPrefab, spawnPos, Quaternion.identity);
         newObj.GetComponent<ClickableEntity>().myGridCell = GridManager.instance.WorldToGrid(spawnPos);
         Vector2Int gridCell = GridManager.instance.WorldToGrid(spawnPos);
         GridManager.instance.SetCellOccupied(gridCell, true);
@@ -129,10 +140,10 @@ public class WaveManager : MonoBehaviour
         spawnPos = GridManager.instance.GetGroundY(spawnPos, 20f, spawningHeightOffset);
         return spawnPos;
     }
-    
-    public void HandleMinibossFailure()
+
+    public void LoseAgainstMiniboss()
     {
-        Debug.Log("Miniboss Failed! Restarting Wave.");
+        Debug.Log("Failed To Defeat Miniboss! Restarting Wave.");
 
         // Reset destroyed harvestable objects count
         DestroyedHarvestableObjectsCount = 0;
@@ -140,5 +151,30 @@ public class WaveManager : MonoBehaviour
         // Respawn the wave
         isInMinibossPhase = 0;
         SpawnWave();
+    }
+    
+    public void WinAgainstMiniboss()
+    {
+        Debug.Log("Miniboss Defeated!");
+        
+        // Reset destroyed harvestable objects count
+        DestroyedHarvestableObjectsCount = 0;
+
+        // Proceed to next wave
+        isInMinibossPhase = 0;
+
+        CurrentWave++;
+        Debug.Log("Moving onto wave number: " + CurrentWave);
+        if (CurrentWave != 10)
+        {
+            Debug.Log("We will refresh the island since it is not yet the 10th wave (Wave " + (CurrentWave+1) + ")");
+            SpawnWave();
+        }
+        else
+        {
+            Debug.Log("We will go fight the final boss, as it is wave: " + (CurrentWave+1));
+            //Bring to new island to fight boss
+            
+        }
     }
 }

@@ -1,6 +1,8 @@
 public interface IClickable
 {
-    int Health { get; set; }
+    bool isClickable{ get; set; }
+    int CurrentHealth { get; set; }
+    int MaxHealth { get; set; }
     void OnHover();
     void OnUnhover();
     void OnClick();

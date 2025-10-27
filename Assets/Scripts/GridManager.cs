@@ -14,8 +14,6 @@ public class GridManager : MonoBehaviour
     public GameObject floorPlatform;
     public int floorXSize;
     public int floorZSize;
-
-    // get y scale, divide by two, spawn at the x,y + yscale/2 + spawnableheight/2, z
     
     void Awake()
     {
@@ -45,9 +43,9 @@ public class GridManager : MonoBehaviour
     {
         Vector3 floorCenter = floorPlatform.transform.position;
         return new Vector3(
-            floorCenter.x + (gridPos.x * gridCellSize) + (gridCellSize * 0.5f), 
+            floorCenter.x + (gridPos.x * gridCellSize), 
             floorCenter.y, 
-            floorCenter.z + (gridPos.y * gridCellSize) + (gridCellSize * 0.5f)
+            floorCenter.z + (gridPos.y * gridCellSize)
         );
     }
 
@@ -158,26 +156,26 @@ public class GridManager : MonoBehaviour
         // Vertical lines (along Z-axis)
         for (float x = -halfWidth; x <= halfWidth; x += gridCellSize)
         {
-            Vector3 start = new Vector3(floorCenter.x + x, floorCenter.y + 0.01f, floorCenter.z - halfHeight);
-            Vector3 end = new Vector3(floorCenter.x + x, floorCenter.y + 0.01f, floorCenter.z + halfHeight);
+            Vector3 start = new Vector3(floorCenter.x + x, floorCenter.y + 0.49f, floorCenter.z - halfHeight);
+            Vector3 end = new Vector3(floorCenter.x + x, floorCenter.y + 0.49f, floorCenter.z + halfHeight);
             Gizmos.DrawLine(start, end);
         }
         
         // Horizontal lines (along X-axis)
         for (float z = -halfHeight; z <= halfHeight; z += gridCellSize)
         {
-            Vector3 start = new Vector3(floorCenter.x - halfWidth, floorCenter.y + 0.01f, floorCenter.z + z);
-            Vector3 end = new Vector3(floorCenter.x + halfWidth, floorCenter.y + 0.01f, floorCenter.z + z);
+            Vector3 start = new Vector3(floorCenter.x - halfWidth, floorCenter.y + 0.49f, floorCenter.z + z);
+            Vector3 end = new Vector3(floorCenter.x + halfWidth, floorCenter.y + 0.49f, floorCenter.z + z);
             Gizmos.DrawLine(start, end);
         }
         
         // Draw occupied cells
-        Gizmos.color = Color.red;
+        Gizmos.color = Color.blue;
         foreach (Vector2Int occupiedCell in occupiedCells)
         {
             Vector3 cellCenter = GridToWorld(occupiedCell);
-            cellCenter.y = floorCenter.y + 0.02f; // Slightly above the floor
-            Gizmos.DrawWireCube(cellCenter, new Vector3(gridCellSize, 0.1f, gridCellSize));
+            cellCenter.y = floorCenter.y + 0.5f; // Slightly above the floor
+            Gizmos.DrawCube(cellCenter, new Vector3(gridCellSize, 0.1f, gridCellSize));
         }
     }
     #endif
