@@ -13,7 +13,7 @@ public class HarvestableObject : ClickableEntity, IClickable
 
     public override void Initialize()
     {
-        Debug.Log("Initializing Harvestable Object");
+        // Debug.Log("Initializing Harvestable Object");
         isClickable = true;
         isCorrupted = false;
         CurrentHealth = Random.Range(4,6);
@@ -34,23 +34,23 @@ public class HarvestableObject : ClickableEntity, IClickable
     {
         if (!isClickable)
         {
-            Debug.Log("Harvestable Object is not clickable right now.");
+            // Debug.Log("Harvestable Object is not clickable right now.");
             return;
         }
 
         if (isCorrupted)
         {
-            CurrentHealth -= PlayerData.instance.damageToHarvestablesPerClick;
-            Debug.Log("Clicked! Current Health: " + CurrentHealth);    
+            CurrentHealth -= PlayerData.Instance.damageToHarvestablesPerClick;
+            // Debug.Log("Clicked! Current Health: " + CurrentHealth);    
         }
         else
         {
             clicksToCorrupt--;
-            Debug.Log("Corrupting... Clicks left to corrupt: " + clicksToCorrupt);
+            // Debug.Log("Corrupting... Clicks left to corrupt: " + clicksToCorrupt);
             if (clicksToCorrupt <= 0)
             {
                 isCorrupted = true;
-                Debug.Log("Object Corrupted! You can now harvest it.");
+                // Debug.Log("Object Corrupted! You can now harvest it.");
             }
         }
     }
@@ -58,21 +58,21 @@ public class HarvestableObject : ClickableEntity, IClickable
     public void OnHover()
     {
         // Change sprite to a hovered one
-        Debug.Log("Hovering over Harvestable Object");
+        // Debug.Log("Hovering over Harvestable Object");
 
     }
 
     public void OnUnhover()
     {
         // Change back to default sprite
-        Debug.Log("Stopped hovering over Harvestable Object");
+        // Debug.Log("Stopped hovering over Harvestable Object");
     }
     
     public override void HandleDestroy()
     {
-        GridManager.instance.SetCellOccupied(myGridCell, false);
-        PlayerData.instance.AddDreamEssences(dreamEssenceGain);
-        WaveManager.instance.OnHarvestableDestroyed();
+        GridManager.Instance.SetCellOccupied(myGridCell, false);
+        PlayerData.Instance.AddDreamEssences(dreamEssenceGain);
+        WaveManager.Instance.OnHarvestableDestroyed();
         Destroy(gameObject);
         // Can add effects here too
     }

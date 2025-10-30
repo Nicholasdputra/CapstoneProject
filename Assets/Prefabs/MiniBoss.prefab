@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3588979487495256500}
   - component: {fileID: 7379618085228762882}
   - component: {fileID: 8178216314067453738}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: MiniBoss
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -123,10 +123,14 @@ MonoBehaviour:
   currentHealth: 50
   maxHealth: 50
   myGridCell: {x: 0, y: 0}
-  miniBossName: BananaBread
+  bossName: Miniboss Prefab Name
   healthBarObject: {fileID: 0}
-  miniBossNameText: {fileID: 0}
+  bossNameText: {fileID: 0}
   healthBar: {fileID: 0}
   healthText: {fileID: 0}
+  timerBarObject: {fileID: 0}
+  timerBar: {fileID: 0}
   timer: 0
-  timeLimit: 30
+  timeLimit: 20
+  soulEssenceGain: 1
+  dreamEssenceGain: 10

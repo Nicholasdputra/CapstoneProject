@@ -105,14 +105,14 @@ using System.IO;
 
 public class PlayerData : MonoBehaviour
 {
-    public static PlayerData instance;
+    public static PlayerData Instance;
     public PlayerHUD playerHUD;
 
     void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
             DontDestroyOnLoad(gameObject);
             // LoadData();
         }
@@ -138,7 +138,7 @@ public class PlayerData : MonoBehaviour
     [Header("Clicking Variables")]
     public int soulEssencesGainPerClick;
     public int damageToHarvestablesPerClick;
-    public int damageToMinibossPerClick;
+    public int damageToBossPerClick;
 
     #region Soul Essences
     [SerializeField] private int soulEssences;

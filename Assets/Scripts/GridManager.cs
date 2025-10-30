@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class GridManager : MonoBehaviour
 {
-    public static GridManager instance;
+    public static GridManager Instance;
 
     public float gridCellSize = 1f;
     public LayerMask groundLayer;
@@ -14,18 +14,25 @@ public class GridManager : MonoBehaviour
     public GameObject floorPlatform;
     public int floorXSize;
     public int floorZSize;
+    public float spawningHeightOffset;
     
     void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
             DontDestroyOnLoad(gameObject);
         }
         else
         {
             Destroy(gameObject);
         }
+    }
+
+    public void Start()
+    {
+        CalculateFloorSize();
+        DetermineHarvestableHeightOffset();
     }
 
     # region Helper Methods
@@ -71,6 +78,8 @@ public class GridManager : MonoBehaviour
     // Calculate floor size in grid cells
     public void CalculateFloorSize()
     {
+        floorPlatform = GameObject.FindWithTag("FloorPlatform");
+        Debug.Assert(floorPlatform != null, "Floor Platform not found! Please ensure it is tagged correctly."); 
         floorXSize = Mathf.RoundToInt(floorPlatform.transform.localScale.x / gridCellSize);
         floorZSize = Mathf.RoundToInt(floorPlatform.transform.localScale.z / gridCellSize);
     }
@@ -83,7 +92,7 @@ public class GridManager : MonoBehaviour
 
         if (unoccupiedCells.Count == 0)
         {
-            return Vector3.zero; // No free cells available
+            return new Vector3(float.NaN, float.NaN, float.NaN);
         }
 
         // Convert HashSet to array for random indexing
@@ -136,6 +145,35 @@ public class GridManager : MonoBehaviour
                 unoccupiedCells.Add(cell);
             }
         }
+    }
+
+    public void DetermineHarvestableHeightOffset()
+    {
+        spawningHeightOffset = GridManager.Instance.floorPlatform.transform.localScale.y;
+    }
+
+    public Vector3 GetSpawnPos()
+    {
+        GridManager.Instance.CalculateFloorSize();
+
+        Vector3 spawnPos = GridManager.Instance.GetRandomFreeTilePosition();
+
+        if (float.IsNaN(spawnPos.x))
+        {
+            return Vector3.zero; 
+        }
+        
+        spawnPos = GridManager.Instance.GetGroundY(spawnPos, 20f, spawningHeightOffset);
+        return spawnPos;
+    }
+
+    public (int occupiedCells, int totalCells) MarkGridAvailability()
+    {
+        GridManager.Instance.CalculateFloorSize();
+        int totalCells = GridManager.Instance.floorXSize * GridManager.Instance.floorZSize;
+        int occupiedCells = FindObjectsOfType<HarvestableObject>().Length;
+
+        return (occupiedCells, totalCells);
     }
     
     #if UNITY_EDITOR

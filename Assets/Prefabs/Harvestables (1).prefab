@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 649678525489325266}
   - component: {fileID: 7681256059431637932}
   - component: {fileID: 5362051651821511482}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Harvestables (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -120,4 +120,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1294ff4d912246d48a6e734552ced13f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentHealth: 5
+  maxHealth: 5
   myGridCell: {x: 0, y: 0}

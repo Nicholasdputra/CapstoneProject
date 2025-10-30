@@ -4,5 +4,20 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 7f05ed80d5bd1364786c0019646d75ca
+  - enabled: 1
+    path: Assets/Scenes/ResourceIsland1.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/BossIsland1.unity
+    guid: ede6f2ffd15644541a42ba7227a5613a
+  - enabled: 1
+    path: Assets/Scenes/ResourceIsland2.unity
+    guid: 7ff32b5d92e25e440bec267dc0d1261c
+  - enabled: 1
+    path: Assets/Scenes/BossIsland2.unity
+    guid: fabf28010a3cf4b4298d4ba2c4414584
   m_configObjects: {}
