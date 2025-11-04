@@ -9,6 +9,17 @@ public class SettingsScript : MonoBehaviour
 
     void Start()
     {
+        if (bgmSlider == null || sfxSlider == null)
+        {
+            Debug.LogError("BGM or SFX Slider is not assigned in the inspector.");
+            return;
+        }
+        
+        if (settingsPanel != null)
+        {
+            settingsPanel.SetActive(false);
+        }
+
         LoadSettings();
     }
 
@@ -28,23 +39,29 @@ public class SettingsScript : MonoBehaviour
     public void OpenSettings()
     {
         if (settingsPanel != null)
+        {
             settingsPanel.SetActive(true);
+        }
     }
 
     // Close settings panel
     public void CloseSettings()
     {
         if (settingsPanel != null)
+        {
             settingsPanel.SetActive(false);
+        }
     }
 
     // BGM Slider On Value Changed
-    public void SetBGMVolume(float volume)
+    public void SetBGMVolume()
     {
+        // Debug.Log("Slider.value directly: " + bgmSlider.value);
+        // Debug.Log("Slider min: " + bgmSlider.minValue + ", max: " + bgmSlider.maxValue);
         float bgmVolume = bgmSlider.value;
         PlayerPrefs.SetFloat("BGMVolume", bgmVolume);
         PlayerPrefs.Save();
-
+        // Debug.Log("BGM Volume set to: " + PlayerPrefs.GetFloat("BGMVolume"));
         if (AudioManager.Instance != null)
         {
             AudioManager.Instance.DetermineVolume(AudioManager.Instance.FindCurrentlyPlayingClip());
@@ -52,17 +69,18 @@ public class SettingsScript : MonoBehaviour
     }
 
     // SFX Slider On Value Changed
-    public void SetSFXVolume(float volume)
+    public void SetSFXVolume()
     {
+        // Debug.Log("Slider.value directly: " + sfxSlider.value);
+        // Debug.Log("Slider min: " + sfxSlider.minValue + ", max: " + sfxSlider.maxValue);
         float sfxVolume = sfxSlider.value;
         PlayerPrefs.SetFloat("SFXVolume", sfxVolume);
         PlayerPrefs.Save();
+        // Debug.Log("SFX Volume set to: " + PlayerPrefs.GetFloat("SFXVolume"));
 
         if (AudioManager.Instance != null)
         {
             AudioManager.Instance.DetermineVolume(AudioManager.Instance.FindCurrentlyPlayingClip());
         }
     }
-
-    
 }

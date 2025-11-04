@@ -18,11 +18,11 @@ public class WaveManager : MonoBehaviour
 
     public const int MAXWAVEINDEX = 9;
 
-    private int currentWave = 0;
-    public int CurrentWave 
+    private int currentWaveIndex = 0;
+    public int CurrentWaveIndex 
     {
-        get => currentWave;
-        set => currentWave = Mathf.Clamp(value, 0, MAXWAVEINDEX);
+        get => currentWaveIndex;
+        set => currentWaveIndex = Mathf.Clamp(value, 0, MAXWAVEINDEX);
     }
 
     public int isInMinibossPhase;
@@ -49,7 +49,7 @@ public class WaveManager : MonoBehaviour
     public void CheckIfShouldSpawnWave()
     {
         Debug.Log("Checking if we should spawn wave...");
-        if(IslandManager.Instance.isInBossPhase)
+        if (IslandManager.Instance.isInBossPhase == 1)
         {
             Debug.Log("We are in boss phase, not spawning wave.");
             return;
@@ -82,7 +82,7 @@ public class WaveManager : MonoBehaviour
             }
             else
             {
-                harvestableObjectThisWave = harvestableObjectCountsPerWave[CurrentWave];
+                harvestableObjectThisWave = harvestableObjectCountsPerWave[CurrentWaveIndex];
                 SpawnWave();
             }
         }
@@ -90,7 +90,7 @@ public class WaveManager : MonoBehaviour
 
     public void RefreshIsland()
     {
-        Debug.Log("Refreshing Island for Wave: " + CurrentWave);
+        Debug.Log("Refreshing Island for Wave: " + CurrentWaveIndex);
         DestroyedHarvestableObjectsCount = 0;
         isInMinibossPhase = 0;
         SpawnWave();
@@ -104,7 +104,7 @@ public class WaveManager : MonoBehaviour
     // Spawn New Wave
     public void SpawnWave()
     {
-        harvestableObjectThisWave = harvestableObjectCountsPerWave[CurrentWave];
+        harvestableObjectThisWave = harvestableObjectCountsPerWave[CurrentWaveIndex];
 
         (int occupiedCells, int totalCells) = GridManager.Instance.MarkGridAvailability();
         
@@ -113,7 +113,7 @@ public class WaveManager : MonoBehaviour
             Debug.LogWarning("Not enough free tiles to spawn all objects!");
             harvestableObjectThisWave = totalCells - occupiedCells;
         }
-
+        GridManager.Instance.DetermineHeightOffset();
         for (int i = 0; i < harvestableObjectThisWave; i++)
         {
             Vector3 spawnPos = GridManager.Instance.GetSpawnPos();
@@ -156,8 +156,6 @@ public class WaveManager : MonoBehaviour
         GridManager.Instance.SetCellOccupied(gridCell, true);
     }
 
-    
-
     public void LoseAgainstMiniboss()
     {
         Debug.Log("Failed To Defeat Miniboss! Restarting Wave.");
@@ -180,19 +178,17 @@ public class WaveManager : MonoBehaviour
         // Proceed to next wave
         isInMinibossPhase = 0;
 
-
-        PlayerData.Instance.playerHUD.UpdateCurrentWaveText();
-
-        Debug.Log("Moving onto wave number: " + CurrentWave);
-        if (CurrentWave != MAXWAVEINDEX)
+        Debug.Log("From wave number: " + CurrentWaveIndex);
+        if (CurrentWaveIndex != MAXWAVEINDEX)
         {
-            Debug.Log("We will refresh the island since it is not yet the 10th wave, Current Wave: " + (CurrentWave) + "Max Wave: " + MAXWAVEINDEX);
+            CurrentWaveIndex++;
+            PlayerData.Instance.playerHUD.UpdateCurrentWaveIndexText();
+            Debug.Log("We will refresh the island since it is not yet the 10th wave, Next Wave: " + (CurrentWaveIndex) + "Max Wave: " + MAXWAVEINDEX);
             SpawnWave();
-            CurrentWave++;
         }
         else
         {
-            Debug.Log("We will go fight the final boss, as it is wave: " + (CurrentWave));
+            Debug.Log("We will go fight the final boss, as it is wave: " + (CurrentWaveIndex));
             //Bring to new island to fight boss
             IslandManager.Instance.GoToBossIsland();
         }

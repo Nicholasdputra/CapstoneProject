@@ -37,14 +37,14 @@ public class MiniBossScript : BossTypeEntity, IClickable
 
         if (CurrentHealth > 0)
         {
-            Debug.Log("Damaging Miniboss");
+            // Debug.Log("Damaging Miniboss");
             CurrentHealth -= PlayerData.Instance.damageToBossPerClick;
             healthBar.fillAmount = (float) CurrentHealth / MaxHealth;
             healthText.text = CurrentHealth.ToString() + " / " + MaxHealth.ToString();
         }
         else
         {
-            Debug.Log("Miniboss already at 0 health");
+            // Debug.Log("Miniboss already at 0 health");
         }
     }
 

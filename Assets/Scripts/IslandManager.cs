@@ -4,7 +4,7 @@ using System.Collections;
 
 public class IslandManager : MonoBehaviour
 {
-    public bool isInBossPhase;
+    public int isInBossPhase;
     public static IslandManager Instance;
     private int currentIslandIndex = 0;
     public GameObject bossPrefab;
@@ -28,13 +28,11 @@ public class IslandManager : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
     void Start()
     {
-        
+        GridManager.Instance.DetermineHeightOffset();
     }
 
-    // Update is called once per frame
     void Update()
     {
 
@@ -65,11 +63,10 @@ public class IslandManager : MonoBehaviour
         GridManager.Instance.SetCellOccupied(gridCell, true);
     }
 
-    
-
     public void GoToBossIsland()
     {
         string bossSceneName = "BossIsland" + (CurrentIslandIndex + 1).ToString(); 
+        WaveManager.Instance.isInMinibossPhase = 0;
         SceneManager.LoadScene(bossSceneName);
     }
 
@@ -77,7 +74,7 @@ public class IslandManager : MonoBehaviour
     {
         string bossSceneName = "ResourceIsland" + (CurrentIslandIndex + 1).ToString(); 
         SceneManager.LoadScene(bossSceneName);
-        WaveManager.Instance.CurrentWave = 9;
+        WaveManager.Instance.CurrentWaveIndex = 9;
         WaveManager.Instance.isInMinibossPhase = 0;
         WaveManager.Instance.DestroyedHarvestableObjectsCount = 0;
         WaveManager.Instance.SpawnWave();
@@ -87,12 +84,12 @@ public class IslandManager : MonoBehaviour
     {
         CurrentIslandIndex++;
         string nextIslandSceneName = "ResourceIsland" + (CurrentIslandIndex + 1).ToString(); 
-        WaveManager.Instance.CurrentWave = 0;
-        PlayerData.Instance.playerHUD.UpdateCurrentWaveText();
-        WaveManager.Instance.isInMinibossPhase = 0;
+        WaveManager.Instance.CurrentWaveIndex = 0;
+        PlayerData.Instance.playerHUD.UpdateCurrentWaveIndexText();
+        isInBossPhase = 0;
         WaveManager.Instance.DestroyedHarvestableObjectsCount = 0;
         StartCoroutine(ChangeToResourceIsland(nextIslandSceneName));
-        isInBossPhase = false;
+        isInBossPhase = 0;
     }
 
     public IEnumerator ChangeToResourceIsland(string nextIslandSceneName)

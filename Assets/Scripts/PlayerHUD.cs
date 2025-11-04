@@ -8,18 +8,19 @@ public class PlayerHUD : MonoBehaviour
     public TextMeshProUGUI soulEssencesText;
     public TextMeshProUGUI humanSoulText;
     public TextMeshProUGUI waveText;
-    // public Button ;
+    // public Button continueToBossButton;
+    // public Button refreshIslandButton;
 
     void Start()
     {
         dreamEssencesText.text = PlayerData.Instance.DreamEssences.ToString();
         soulEssencesText.text = PlayerData.Instance.SoulEssences.ToString();
         humanSoulText.text = PlayerData.Instance.HumanSouls.ToString();
-        waveText.text = (WaveManager.Instance.CurrentWave + 1).ToString() + " / " + (WaveManager.MAXWAVEINDEX + 1).ToString();
+        waveText.text = (WaveManager.Instance.CurrentWaveIndex + 1).ToString() + " / " + (WaveManager.MAXWAVEINDEX + 1).ToString();
     }
 
-    public void UpdateCurrentWaveText()
+    public void UpdateCurrentWaveIndexText()
     {
-        waveText.text = (WaveManager.Instance.CurrentWave + 1).ToString() + " / " + (WaveManager.MAXWAVEINDEX + 1).ToString();
+        waveText.text = (WaveManager.Instance.CurrentWaveIndex + 1).ToString() + " / " + (WaveManager.MAXWAVEINDEX + 1).ToString();
     }
 }
