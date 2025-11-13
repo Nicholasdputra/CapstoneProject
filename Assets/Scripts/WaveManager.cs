@@ -1,39 +1,36 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class WaveManager : MonoBehaviour
 {
+    public static int MAXWAVESPERISLAND = 10;
+
     public static WaveManager Instance;
-    
-    [SerializeField] private int destroyedHarvestableObjectsCount = 0;
-    public int DestroyedHarvestableObjectsCount
-    {
-        get => destroyedHarvestableObjectsCount;
-        set => destroyedHarvestableObjectsCount = Mathf.Clamp(value, 0, harvestableObjectThisWave);
-    }
+    public IntEventChannel WaveChangedEvent;
 
-    public int harvestableObjectThisWave;
-    public int[] harvestableObjectCountsPerWave;
+    public WaveData waveDataArray;
+    public WaveSO currentWaveData;
 
-    public GameObject harvestableObjectPrefab;
+    public List<BaseObject> currentAliveEnemies;
 
-    public const int MAXWAVEINDEX = 9;
+    #region Events
+    [Header("Events")]
+    [Header("Listening")]
+    public VoidEventChannel OnIslandReadyForWave;
+    [Header("Broadcasting")]
+    public VoidEventChannel OnWaveCompleted;
+    #endregion
 
-    private int currentWaveIndex = 0;
-    public int CurrentWaveIndex 
-    {
-        get => currentWaveIndex;
-        set => currentWaveIndex = Mathf.Clamp(value, 0, MAXWAVEINDEX);
-    }
-
-    public int isInMinibossPhase;
-    [SerializeField] public GameObject minibossPrefab;
+    public GameObject postWaveClearButtons;
+    private GameObject goToMinibossButton;
+    private GameObject refreshCurrentWaveButton;
 
     void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -41,156 +38,122 @@ public class WaveManager : MonoBehaviour
         }
     }
 
-    public void Start()
-    {   
-        CheckIfShouldSpawnWave();
+    void OnEnable()
+    {
+        OnIslandReadyForWave.OnEventRaised += SpawnNextWave;    
     }
 
-    public void CheckIfShouldSpawnWave()
+    private void OnDisable()
     {
-        Debug.Log("Checking if we should spawn wave...");
-        if (IslandManager.Instance.isInBossPhase == 1)
+        OnIslandReadyForWave.OnEventRaised -= SpawnNextWave;
+    }
+
+    private void SpawnNextWave()
+    {
+        // Debug.Log("Spawning Next Wave: " + (currentWaveData != null ? currentWaveData.waveNumber + 1 : 1));
+        if (currentWaveData == null)
         {
-            Debug.Log("We are in boss phase, not spawning wave.");
+            StartWave(1);
             return;
         }
-
-        // Scan to see if there are harvestable objects in the scene already
-        HarvestableObject[] existingObjects = FindObjectsOfType<HarvestableObject>();
-        if (existingObjects.Length > 0)
-        {
-            harvestableObjectThisWave = existingObjects.Length;
-        }
         else
         {
-            //Check to see if there's a miniboss in scene
-            if (FindObjectOfType<MiniBossScript>() != null)
-            {
-                isInMinibossPhase = 1;
-                return;
-            }
-            else
-            {
-                isInMinibossPhase = 0;
-            }
-
-            // Check if we're in mini boss phase, if yes, call miniboss spawn function
-            if (isInMinibossPhase == 1)
-            {
-                // Miniboss spawn function here
-                SpawnMiniboss();
-            }
-            else
-            {
-                harvestableObjectThisWave = harvestableObjectCountsPerWave[CurrentWaveIndex];
-                SpawnWave();
-            }
+            StartWave(currentWaveData.waveNumber + 1);
         }
-    }
-
-    public void RefreshIsland()
-    {
-        Debug.Log("Refreshing Island for Wave: " + CurrentWaveIndex);
-        DestroyedHarvestableObjectsCount = 0;
-        isInMinibossPhase = 0;
-        SpawnWave();
-    }
-
-    public void ContinueToBoss()
-    {
-
-    }
-
-    // Spawn New Wave
-    public void SpawnWave()
-    {
-        harvestableObjectThisWave = harvestableObjectCountsPerWave[CurrentWaveIndex];
-
-        (int occupiedCells, int totalCells) = GridManager.Instance.MarkGridAvailability();
-        
-        if (harvestableObjectThisWave > (totalCells - occupiedCells))
-        {
-            Debug.LogWarning("Not enough free tiles to spawn all objects!");
-            harvestableObjectThisWave = totalCells - occupiedCells;
-        }
-        GridManager.Instance.DetermineHeightOffset();
-        for (int i = 0; i < harvestableObjectThisWave; i++)
-        {
-            Vector3 spawnPos = GridManager.Instance.GetSpawnPos();
-
-            if (spawnPos == Vector3.zero)
-            {
-                Debug.LogWarning("No free spawn position available, stopping spawn.");
-                break;
-            }
-
-            GameObject newObj = Instantiate(harvestableObjectPrefab, spawnPos, Quaternion.identity);
-            newObj.GetComponent<HarvestableObject>().myGridCell = GridManager.Instance.WorldToGrid(spawnPos);
-            
-            Vector2Int gridCell = GridManager.Instance.WorldToGrid(spawnPos);
-            GridManager.Instance.SetCellOccupied(gridCell, true);
-        }
-    }
-
-    // When a harvestable object is destroyed
-    public void OnHarvestableDestroyed()
-    {
-        Debug.Log("Harvestable Object Destroyed!");
-        
-        DestroyedHarvestableObjectsCount++;
-        if (DestroyedHarvestableObjectsCount == harvestableObjectThisWave)
-        {
-            isInMinibossPhase = 1;
-            SpawnMiniboss();
-        }
-    }
-
-    public void SpawnMiniboss()
-    {
-        Debug.Log("Spawning Miniboss!");
-        // Miniboss spawning logic here
-        Vector3 spawnPos = GridManager.Instance.GetSpawnPos();
-        GameObject newObj = Instantiate(minibossPrefab, spawnPos, Quaternion.identity);
-        newObj.GetComponent<ClickableEntity>().myGridCell = GridManager.Instance.WorldToGrid(spawnPos);
-        Vector2Int gridCell = GridManager.Instance.WorldToGrid(spawnPos);
-        GridManager.Instance.SetCellOccupied(gridCell, true);
-    }
-
-    public void LoseAgainstMiniboss()
-    {
-        Debug.Log("Failed To Defeat Miniboss! Restarting Wave.");
-
-        // Reset destroyed harvestable objects count
-        DestroyedHarvestableObjectsCount = 0;
-
-        // Respawn the wave
-        isInMinibossPhase = 0;
-        SpawnWave();
     }
     
-    public void WinAgainstMiniboss()
+    void Start()
     {
-        Debug.Log("Miniboss Defeated!");
-        
-        // Reset destroyed harvestable objects count
-        DestroyedHarvestableObjectsCount = 0;
+        Initialize();
+    }
 
-        // Proceed to next wave
-        isInMinibossPhase = 0;
+    void Initialize()
+    {
+        currentAliveEnemies = new List<BaseObject>();
+        goToMinibossButton = postWaveClearButtons.transform.Find("GoToMinibossButton").gameObject;
+        refreshCurrentWaveButton = postWaveClearButtons.transform.Find("RefreshIslandButton").gameObject;
+        postWaveClearButtons.SetActive(false);
+    }
 
-        Debug.Log("From wave number: " + CurrentWaveIndex);
-        if (CurrentWaveIndex != MAXWAVEINDEX)
+    public void StartWave(int waveIndex)
+    {
+        int adjustedIndex = waveIndex - 1;
+        if (adjustedIndex < waveDataArray.harvestableWaves.Length)
         {
-            CurrentWaveIndex++;
-            PlayerData.Instance.playerHUD.UpdateCurrentWaveIndexText();
-            Debug.Log("We will refresh the island since it is not yet the 10th wave, Next Wave: " + (CurrentWaveIndex) + "Max Wave: " + MAXWAVEINDEX);
-            SpawnWave();
+            currentWaveData = waveDataArray.harvestableWaves[adjustedIndex];
+            WaveChangedEvent.RaiseEvent(currentWaveData != null ? currentWaveData.waveNumber : 1);
+            SpawnObjectsForWave(currentWaveData);
         }
         else
         {
-            Debug.Log("We will go fight the final boss, as it is wave: " + (CurrentWaveIndex));
-            //Bring to new island to fight boss
-            IslandManager.Instance.GoToBossIsland();
+            Debug.Log("All waves completed!");
         }
+    }
+
+    public void SpawnObjectsForWave(WaveSO waveData)
+    {
+        int totalEnemiesInWave = UnityEngine.Random.Range(waveData.minEnemies, waveData.maxEnemies + 1);
+        for (int i = 0; i < totalEnemiesInWave; i++)
+        {
+            GameObject objectToSpawn = waveData.objectPrefabs[UnityEngine.Random.Range(0, waveData.objectPrefabs.Length)];
+            BaseObject baseObjectComponent = objectToSpawn.GetComponent<BaseObject>();
+
+            // Get the base world position (center of tile)
+            Vector3 spawnPos = GridManager.Instance.GetRandomFreeTilePosition(
+                baseObjectComponent.XSize,
+                baseObjectComponent.ZSize
+            );
+
+            // Apply an offset so pivot = bottom-left corner
+            float cellSize = GridManager.Instance.gridCellSize; // or whatever your tile size var is called
+            spawnPos.x += (baseObjectComponent.XSize * cellSize) / 2f - (cellSize / 2f);
+            spawnPos.z += (baseObjectComponent.ZSize * cellSize) / 2f - (cellSize / 2f);
+
+            // Instantiate
+            GameObject spawnedObject = Instantiate(objectToSpawn, spawnPos, Quaternion.identity);
+            spawnedObject.name = $"{objectToSpawn.name}_Wave{waveData.waveNumber}_Harvestable{i + 1}";
+
+            // Register in lists
+            BaseObject spawnedBaseObjectComponent = spawnedObject.GetComponent<BaseObject>();
+            currentAliveEnemies.Add(spawnedBaseObjectComponent);
+
+            // Mark occupied cells
+            GridManager.Instance.SetUpOccupiedClickableEntityGridPositions(spawnedBaseObjectComponent);
+        }
+    }
+    
+    public void CheckIfWaveCompleted()
+    {
+        currentAliveEnemies.RemoveAll(item => item == null);
+        if (currentAliveEnemies.Count == 0)
+        {
+            WaveCompleted();
+        }
+    }
+
+    public void WaveCompleted()
+    {
+        currentAliveEnemies.RemoveAll(item => item == null);
+        if (currentAliveEnemies.Count == 0)
+        {
+            Debug.Log("Wave " + currentWaveData.waveNumber + " completed!");
+            postWaveClearButtons.SetActive(true);
+        }
+        else
+        {
+            Debug.LogWarning("Something is wrong! Not all enemies are defeated yet.");
+            Debug.Log("There are still " + currentAliveEnemies.Count + " enemies alive.");
+        }
+    }
+
+    public void RefreshCurrentWave()
+    {
+        postWaveClearButtons.SetActive(false);
+        SpawnObjectsForWave(currentWaveData);
+    }
+
+    public void GoToMiniboss()
+    {
+        OnWaveCompleted.RaiseEvent();
     }
 }

@@ -1,77 +1,108 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class InputManager : MonoBehaviour
 {
-    private IClickable currentlyHovered;
+    public static InputManager Instance;
+    public int detectionRadius = 0;
+    public LayerMask excludedLayers;
 
-    // Update is called once per frame
-    void Update()
+    private Camera cam;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);  
+        }
+    }
+
+    private void Start()
+    {
+        cam = Camera.main;
+    }
+
+    private void Update()
     {
         HandleHover();
         HandleClick();
     }
 
-    // For hovering over clickable objects
     void HandleHover()
     {
-        // Raycast from camera to the mouse pos, then sort it based on distance, so it's closest first.
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit[] hits = Physics.RaycastAll(ray);
-
-        // If ray hits something 
-        if (hits.Length > 0)
+        Vector2Int? hoveredGrid = GetHoveredGridCell();
+        if (hoveredGrid == null)
         {
-            System.Array.Sort(hits, (x, y) => x.distance.CompareTo(y.distance)); //Sort based on distance, closest first
-            IClickable newHovered = null;
-
-            foreach (RaycastHit hit in hits) //Then check if any of the objects are clickable
-            {
-                // Debug.Log("Ray hit: " + hit.collider.name);
-                IClickable clickable = hit.collider.GetComponent<IClickable>();
-
-                if (clickable != null) // if yes, set it to newly hovered object
-                {
-                    newHovered = clickable;
-                    break;
-                }
-            }
-
-            // if the newly hovered one is different from the old one
-            if (newHovered != currentlyHovered)
-            {
-                //Unhover the old hovered object
-                if (currentlyHovered != null)
-                {
-                    currentlyHovered.OnUnhover();
-                }
-
-                // Change what's being hovered currently to the new one
-                currentlyHovered = newHovered;
-
-                if (newHovered != null)
-                {
-                    currentlyHovered.OnHover();
-                }
-            }
+            return;
         }
-        else //if ray hits nothing
+
+        List<ClickableEntity> entities = GetEntitiesInRadius(hoveredGrid.Value, detectionRadius);
+
+        foreach (var entity in entities)
         {
-            // Unhover the currently hovered object
-            if (currentlyHovered != null)
-            {
-                currentlyHovered.OnUnhover();
-                currentlyHovered = null;
-            }
+            entity.OnHover(); // Call the hover event
         }
     }
 
-    // For handling clicking clickable objects
     void HandleClick()
     {
-        if (Input.GetMouseButtonDown(0) && currentlyHovered != null)
+        if (!Input.GetMouseButtonDown(0))
+            return;
+
+        Vector2Int? hoveredGrid = GetHoveredGridCell();
+        // Debug.Log("Clicked at grid: " + (hoveredGrid.HasValue ? hoveredGrid.Value.ToString() : "null"));
+        if (hoveredGrid == null)
+            return;
+
+        List<ClickableEntity> entities = GetEntitiesInRadius(hoveredGrid.Value, detectionRadius);
+
+        foreach (var entity in entities)
         {
-            // Debug.Log("Clicked on: " + ((MonoBehaviour)currentlyHovered).name);
-            currentlyHovered.OnClick();
+            entity.OnClick(); // Call the click event
         }
+    }
+
+    Vector2Int? GetHoveredGridCell()
+    {
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, 200f, ~excludedLayers))
+        {
+            return GridManager.Instance.ConvertPosFromWorldToGrid(hit.point);
+        }
+
+        return null;
+    }
+
+    List<ClickableEntity> GetEntitiesInRadius(Vector2Int center, int radius)
+    {
+        List<ClickableEntity> results = new List<ClickableEntity>();
+
+        foreach (var enemy in WaveManager.Instance.currentAliveEnemies)
+        {
+            foreach (var gridPos in enemy.OccupiedGridPositions)
+            {
+                int dx = Mathf.Abs(gridPos.x - center.x);
+                int dz = Mathf.Abs(gridPos.y - center.y);
+
+                if (dx <= radius && dz <= radius)
+                {
+                    if (!results.Contains(enemy))
+                        results.Add(enemy);
+
+                    break;
+                }
+            }
+        }
+        //List all the entities found in radius for debugging
+        // Debug.Log("Entities in radius: " + results.Count);
+        // Debug.Log("Entities: " + string.Join(", ", results));
+
+        return results;
     }
 }

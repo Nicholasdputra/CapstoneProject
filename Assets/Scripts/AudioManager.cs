@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [System.Serializable]
 public class ModifiedAudioClips
@@ -71,7 +72,7 @@ public class ModifiedAudioClips
 
         // Determine how long to play the clip
         float actualEndTime;
-        if (endTime < 0)
+        if (endTime <= 0)
         {
             // Play to the end of the clip
             actualEndTime = clip.length;
@@ -81,6 +82,7 @@ public class ModifiedAudioClips
             // Play to the specified end time, but don't exceed clip length
             actualEndTime = Mathf.Min(endTime, clip.length);
         }
+
         float duration = actualEndTime - startTime;
 
         // If duration is zero or negative, exit coroutine
@@ -92,7 +94,7 @@ public class ModifiedAudioClips
         {
             // Set the clip and volume
             audioSource.clip = clip;
-            
+
             // Start playing from the specified start time
             audioSource.time = startTime;
             audioSource.Play();
@@ -134,7 +136,6 @@ public class AudioManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            InitializeClips();
         }
         else
         {
@@ -142,6 +143,7 @@ public class AudioManager : MonoBehaviour
         }
 
         Initialize();
+        InitializeClips();
     }
 
     void Initialize()
@@ -197,6 +199,7 @@ public class AudioManager : MonoBehaviour
     {
         if (clip == null)
         {
+            Debug.LogWarning("Clip is null in DetermineVolume.");
             return;
         }
         float audioSourceMultiplier;
@@ -223,6 +226,10 @@ public class AudioManager : MonoBehaviour
                 sfxSource.volume = finalVolume;
             }
         }
+        else
+        {
+            Debug.LogWarning("Audio source is null for clip: " + clip.clip.name);
+        }
     }
 
     // Play a BGM clip once
@@ -232,6 +239,11 @@ public class AudioManager : MonoBehaviour
         {
             DetermineVolume(bgmClips[index]);
             bgmClips[index].PlayOnce();
+        }
+        else
+        {
+            Debug.LogWarning("BGM index out of range: " + index);
+            Debug.LogWarning("Available BGM clips count: " + bgmClips.Length);
         }
     }
 
@@ -243,6 +255,11 @@ public class AudioManager : MonoBehaviour
             DetermineVolume(bgmClips[index]);
             bgmClips[index].PlayTimes(times);
         }
+        else
+        {
+            Debug.LogWarning("BGM index out of range: " + index);
+            Debug.LogWarning("Available BGM clips count: " + bgmClips.Length);
+        }
     }
 
     // Play a BGM clip in a loop
@@ -252,6 +269,11 @@ public class AudioManager : MonoBehaviour
         {
             DetermineVolume(bgmClips[index]);
             bgmClips[index].PlayLoop();
+        }
+        else
+        {
+            Debug.LogWarning("BGM index out of range: " + index);
+            Debug.LogWarning("Available BGM clips count: " + bgmClips.Length);
         }
     }
 
@@ -263,6 +285,11 @@ public class AudioManager : MonoBehaviour
             DetermineVolume(sfxClips[index]);
             sfxClips[index].PlayOnce();
         }
+        else
+        {
+            Debug.LogWarning("SFX index out of range: " + index);
+            Debug.LogWarning("Available SFX clips count: " + sfxClips.Length);
+        }
     }
 
     // Play a SFX clip a specified number of times
@@ -273,6 +300,11 @@ public class AudioManager : MonoBehaviour
             DetermineVolume(sfxClips[index]);
             sfxClips[index].PlayTimes(times);
         }
+        else
+        {
+            Debug.LogWarning("SFX index out of range: " + index);
+            Debug.LogWarning("Available SFX clips count: " + sfxClips.Length);
+        }
     }
 
     // Play a SFX clip in a loop
@@ -282,6 +314,11 @@ public class AudioManager : MonoBehaviour
         {
             DetermineVolume(sfxClips[index]);
             sfxClips[index].PlayLoop();
+        }
+        else
+        {
+            Debug.LogWarning("SFX index out of range: " + index);
+            Debug.LogWarning("Available SFX clips count: " + sfxClips.Length);
         }
     }
 
@@ -305,9 +342,6 @@ public class AudioManager : MonoBehaviour
                 return sfx;
             }
         }
-
-        // Debug.Log("No clip is currently playing.");
         return null; 
-
     }
 }

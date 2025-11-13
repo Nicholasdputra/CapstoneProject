@@ -1,26 +1,60 @@
 using UnityEngine;
 using TMPro;
-using System.ComponentModel;
+using UnityEngine.UI;
 
 public class PlayerHUD : MonoBehaviour
 {
     public TextMeshProUGUI dreamEssencesText;
     public TextMeshProUGUI soulEssencesText;
     public TextMeshProUGUI humanSoulText;
-    public TextMeshProUGUI waveText;
-    // public Button continueToBossButton;
-    // public Button refreshIslandButton;
 
-    void Start()
+    public IntEventChannel DreamEssenceChangedEvent;
+    public IntEventChannel SoulEssenceChangedEvent;
+    public IntEventChannel HumanSoulChangedEvent;    
+    public IntEventChannel WaveChangedEvent;
+
+    public TextMeshProUGUI waveText;
+    public Button continueToBossButton;
+    public Button refreshIslandButton;
+
+    private void OnEnable()
     {
-        dreamEssencesText.text = PlayerData.Instance.DreamEssences.ToString();
-        soulEssencesText.text = PlayerData.Instance.SoulEssences.ToString();
-        humanSoulText.text = PlayerData.Instance.HumanSouls.ToString();
-        waveText.text = (WaveManager.Instance.CurrentWaveIndex + 1).ToString() + " / " + (WaveManager.MAXWAVEINDEX + 1).ToString();
+        DreamEssenceChangedEvent.OnEventRaised += UpdateDreamEssence;
+        SoulEssenceChangedEvent.OnEventRaised += UpdateSoulEssence;
+        HumanSoulChangedEvent.OnEventRaised += UpdateHumanSoul;
+        WaveChangedEvent.OnEventRaised += UpdateWave;
     }
 
-    public void UpdateCurrentWaveIndexText()
+    private void OnDisable()
     {
-        waveText.text = (WaveManager.Instance.CurrentWaveIndex + 1).ToString() + " / " + (WaveManager.MAXWAVEINDEX + 1).ToString();
+        DreamEssenceChangedEvent.OnEventRaised -= UpdateDreamEssence;
+        SoulEssenceChangedEvent.OnEventRaised -= UpdateSoulEssence;
+        HumanSoulChangedEvent.OnEventRaised -= UpdateHumanSoul;
+        WaveChangedEvent.OnEventRaised -= UpdateWave;
+    }
+
+    void UpdateDreamEssence(int value)
+    {
+        dreamEssencesText.text = value.ToString();
+    }
+
+    void UpdateSoulEssence(int value)
+    {                
+        soulEssencesText.text = value.ToString();
+    }
+
+    void UpdateHumanSoul(int value)
+    {
+        humanSoulText.text = value.ToString();
+    }
+    
+    void UpdateWave(int value)
+    {
+        if (WaveManager.Instance.currentWaveData == null)
+        {
+            waveText.text = "Wave 0 / " + WaveManager.MAXWAVESPERISLAND.ToString();
+            return;
+        } 
+        waveText.text = "Wave " + WaveManager.Instance.currentWaveData.waveNumber.ToString() + " / " + WaveManager.MAXWAVESPERISLAND.ToString();
     }
 }

@@ -1,21 +1,48 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using System.Collections;
+
+public enum IslandState
+{
+    HarvestPhase,
+    MinibossPhase,
+    BossPhase
+}
 
 public class IslandManager : MonoBehaviour
 {
-    public int isInBossPhase;
     public static IslandManager Instance;
-    private int currentIslandIndex = 0;
-    public GameObject bossPrefab;
 
+    # region Variables
+    [SerializeField]
+    private int currentIslandIndex;
     public int CurrentIslandIndex
     {
-        get => currentIslandIndex;
-        set => currentIslandIndex = value;
+        get { return currentIslandIndex; }
+        set { currentIslandIndex = value; }
     }
 
-    void Awake()
+    public IslandState currentState;
+    #endregion
+
+    # region Events
+    [Header("Events | Listening (For Setup)")]
+    public VoidEventChannel OnGridInitialized;
+    public bool GridIsReady = false;
+    public VoidEventChannel OnPlayerDataLoaded;
+    public bool PlayerDataIsLoaded = false;
+    
+    public VoidEventChannel OnWaveCompleted;
+    public IntEventChannel OnMinibossCompleted;
+    public VoidEventChannel OnBossCompleted;
+
+    [Header("Broadcasting")]
+    public VoidEventChannel OnIslandReadyForWave;
+    public VoidEventChannel OnIslandReadyForMiniboss;
+    public VoidEventChannel OnIslandReadyForBoss;
+
+    #endregion
+    
+
+    private void Awake()
     {
         if (Instance == null)
         {
@@ -28,75 +55,72 @@ public class IslandManager : MonoBehaviour
         }
     }
 
-    void Start()
+    private void OnEnable()
     {
-        GridManager.Instance.DetermineHeightOffset();
+        OnGridInitialized.OnEventRaised += HandleGridReady;
+        OnPlayerDataLoaded.OnEventRaised += HandlePlayerDataLoaded;
+        OnWaveCompleted.OnEventRaised += HandleWaveStateCompleted;
     }
 
-    void Update()
+    private void OnDisable()
     {
-
+        OnGridInitialized.OnEventRaised -= HandleGridReady;
+        OnPlayerDataLoaded.OnEventRaised -= HandlePlayerDataLoaded;
     }
 
-    public void SpawnBoss()
+    private void HandleGridReady()
     {
-        (int occupiedCells, int totalCells) = GridManager.Instance.MarkGridAvailability();
+        GridIsReady = true;
+        CheckIfCanAdjustIsland();
+    }
 
-        if ((totalCells - occupiedCells) < 1)
+    private void HandlePlayerDataLoaded()
+    {
+        PlayerDataIsLoaded = true;
+        CheckIfCanAdjustIsland();
+    }
+
+    private void HandleWaveStateCompleted()
+    {
+        // Logic to determine next island state based on wave completion
+        if (currentState == IslandState.HarvestPhase)
         {
-            Debug.Log("Not enough space to spawn the boss!");
-            return;
-        } 
-
-        Vector3 spawnPos = GridManager.Instance.GetSpawnPos();
-
-        if (spawnPos == Vector3.zero)
-        {
-            Debug.LogWarning("No free spawn position available, stopping spawn.");
-            return;
+            currentState = IslandState.MinibossPhase;
         }
 
-        GameObject newObj = Instantiate(bossPrefab, spawnPos, Quaternion.identity);
-        newObj.GetComponent<HarvestableObject>().myGridCell = GridManager.Instance.WorldToGrid(spawnPos);
-            
-        Vector2Int gridCell = GridManager.Instance.WorldToGrid(spawnPos);
-        GridManager.Instance.SetCellOccupied(gridCell, true);
+        CheckandImplementPhase();
     }
 
-    public void GoToBossIsland()
+    private void CheckIfCanAdjustIsland()
     {
-        string bossSceneName = "BossIsland" + (CurrentIslandIndex + 1).ToString(); 
-        WaveManager.Instance.isInMinibossPhase = 0;
-        SceneManager.LoadScene(bossSceneName);
+        if (PlayerDataIsLoaded && GridIsReady)
+        {
+            // ReadyToAdjustIsland = true;
+            // ReadyForIslandAdjustment.RaiseEvent();
+            CheckandImplementPhase();
+        }
     }
 
-    public void LoseAgainstBoss()
+    public void CheckandImplementPhase()
     {
-        string bossSceneName = "ResourceIsland" + (CurrentIslandIndex + 1).ToString(); 
-        SceneManager.LoadScene(bossSceneName);
-        WaveManager.Instance.CurrentWaveIndex = 9;
-        WaveManager.Instance.isInMinibossPhase = 0;
-        WaveManager.Instance.DestroyedHarvestableObjectsCount = 0;
-        WaveManager.Instance.SpawnWave();
-    }
-    
-    public void WinAgainstBoss()
-    {
-        CurrentIslandIndex++;
-        string nextIslandSceneName = "ResourceIsland" + (CurrentIslandIndex + 1).ToString(); 
-        WaveManager.Instance.CurrentWaveIndex = 0;
-        PlayerData.Instance.playerHUD.UpdateCurrentWaveIndexText();
-        isInBossPhase = 0;
-        WaveManager.Instance.DestroyedHarvestableObjectsCount = 0;
-        StartCoroutine(ChangeToResourceIsland(nextIslandSceneName));
-        isInBossPhase = 0;
-    }
+        if (currentState == IslandState.HarvestPhase)
+        {
+            // Debug.Log("Harvest Phase Triggered");
+            // Implement Harvest Phase Logic
+            OnIslandReadyForWave.RaiseEvent();
+        }
+        else if (currentState == IslandState.MinibossPhase)
+        {
+            // Debug.Log("Miniboss Phase Triggered");
+            // Implement Miniboss Phase Logic
+            OnIslandReadyForMiniboss.RaiseEvent();
 
-    public IEnumerator ChangeToResourceIsland(string nextIslandSceneName)
-    {
-        SceneManager.LoadScene(nextIslandSceneName);
-        yield return new WaitForSeconds(0.5f);
-        Debug.Log("Changing to Resource Island Scene");
-        WaveManager.Instance.SpawnWave();
+        }
+        else if (currentState == IslandState.BossPhase)
+        {
+            // Debug.Log("Boss Phase Triggered");
+            // Implement Boss Phase Logic
+            OnIslandReadyForBoss.RaiseEvent();
+        }
     }
 }

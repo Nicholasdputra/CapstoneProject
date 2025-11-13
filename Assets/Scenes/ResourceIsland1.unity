@@ -168,7 +168,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 30715189}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: deddde0a1a9718542a050c118aa3144f, type: 3}
+  m_Script: {fileID: 11500000, guid: 46bd2a4e5f1f9674f818c0650d0cc8d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   bgmSlider: {fileID: 998447838}
@@ -946,9 +946,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 208018854}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0f89c9fed0358049b32541b61520354, type: 3}
+  m_Script: {fileID: 11500000, guid: 6a5dfdf7be3b6ff4ea13f19d03bc0548, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  detectionRadius: 0
+  excludedLayers:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!4 &208018856
 Transform:
   m_ObjectHideFlags: 0
@@ -1049,7 +1053,7 @@ GameObject:
   - component: {fileID: 273331280}
   - component: {fileID: 273331279}
   m_Layer: 0
-  m_Name: Wave Manager
+  m_Name: WaveManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1067,12 +1071,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaf6cfaf6e16cae44a0991c154685100, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destroyedHarvestableObjectsCount: 0
-  harvestableObjectThisWave: 0
-  harvestableObjectCountsPerWave: 0a0000000a0000000a0000000a0000000a0000000a0000000a0000000a0000000a0000000a000000
-  harvestableObjectPrefab: {fileID: 7400324556834753936, guid: 5e3e633633de36a49adec9e3d67f51e8, type: 3}
-  isInMinibossPhase: 0
-  minibossPrefab: {fileID: 400237723495182759, guid: 8ea115bfb43e5a04b95f6d21a64cba71, type: 3}
+  WaveChangedEvent: {fileID: 11400000, guid: 256a1e73470d43a4f8e657357bd222f0, type: 2}
+  waveDataArray: {fileID: 11400000, guid: c203e305378cec94fb118a976fb70d60, type: 2}
+  currentWaveData: {fileID: 0}
+  currentAliveEnemies: []
+  OnIslandReadyForWave: {fileID: 11400000, guid: 3cf65725be6108c4aa4995cfaea4c4fa, type: 2}
+  OnWaveCompleted: {fileID: 11400000, guid: 047dbaad262210b44bf0d4ec1b013cea, type: 2}
+  postWaveClearButtons: {fileID: 443990159}
 --- !u!4 &273331280
 Transform:
   m_ObjectHideFlags: 0
@@ -1398,7 +1403,7 @@ GameObject:
   - component: {fileID: 393408335}
   - component: {fileID: 393408334}
   m_Layer: 5
-  m_Name: Continue To Miniboss
+  m_Name: GoToMinibossButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1411,17 +1416,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 393408332}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1693521518}
-  m_Father: {fileID: 1803818028}
+  m_Father: {fileID: 443990160}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -70, y: -106}
+  m_AnchoredPosition: {x: -125, y: -54.25363}
   m_SizeDelta: {x: 250, y: 75}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &393408334
@@ -1467,7 +1472,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 393408335}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 273331279}
+        m_TargetAssemblyTypeName: WaveManager, Assembly-CSharp
+        m_MethodName: GoToMiniboss
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &393408335
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1652,7 +1669,6 @@ GameObject:
   - component: {fileID: 417483142}
   - component: {fileID: 417483141}
   - component: {fileID: 417483140}
-  - component: {fileID: 417483144}
   m_Layer: 5
   m_Name: Pause Menu
   m_TagString: Untagged
@@ -1745,23 +1761,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &417483144
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 417483139}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 390c2351038bf014c9f37ff500f52453, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pauseMenuPanel: {fileID: 1145676687}
-  resumeButton: {fileID: 1386433926}
-  mainMenuButton: {fileID: 2011609878}
-  quitButton: {fileID: 493705265}
-  settingsButton: {fileID: 79237797}
 --- !u!1 &419756837
 GameObject:
   m_ObjectHideFlags: 0
@@ -1855,6 +1854,43 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &443990159
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 443990160}
+  m_Layer: 5
+  m_Name: PostWaveClearButtons
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &443990160
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 443990159}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 574901726}
+  - {fileID: 393408333}
+  m_Father: {fileID: 1803818028}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 890, y: -51.74637}
+  m_SizeDelta: {x: 250, y: 183.50726}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &452902633
 GameObject:
   m_ObjectHideFlags: 0
@@ -2219,7 +2255,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 489177717}
-  - component: {fileID: 489177716}
+  - component: {fileID: 489177718}
   m_Layer: 0
   m_Name: PlayerData
   m_TagString: Untagged
@@ -2227,25 +2263,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &489177716
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 489177715}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0095739b17f3f564db571b4cb1c85e94, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerHUD: {fileID: 1803818029}
-  soulEssencesGainPerClick: 1
-  damageToHarvestablesPerClick: 999
-  damageToBossPerClick: 999
-  soulEssences: 0
-  dreamEssences: 0
-  humanSouls: 0
 --- !u!4 &489177717
 Transform:
   m_ObjectHideFlags: 0
@@ -2261,6 +2278,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &489177718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 489177715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7676fb4ca2e849418ae3ab33b33e53f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentPlayerSave:
+    islandState: 0
+    currentIsland: 0
+    currentWaveIndex: 0
+    ownedUpgradeIDs: []
+    ownedSkillIDs: []
+    dreamEssence: 0
+    soulEssence: 0
+    humanSoul: 0
+    damagePerClick: 100
+  playerHUD: {fileID: 0}
+  OnPlayerDataLoaded: {fileID: 11400000, guid: b11344e0a9708b24d9dfce7ea824c720, type: 2}
+  DreamEssenceChangedEvent: {fileID: 11400000, guid: 4b3f0f3f608d8924f9b10bbbe232f56e, type: 2}
+  SoulEssenceChangedEvent: {fileID: 11400000, guid: 37da2cf606bdbdd4e891b066e815b71d, type: 2}
+  HumanSoulChangedEvent: {fileID: 11400000, guid: 829409df2e908ca4c87ec3ddd9c1bb3a, type: 2}
 --- !u!1 &493705263
 GameObject:
   m_ObjectHideFlags: 0
@@ -2344,7 +2388,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 417483144}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PauseMenuScript, Assembly-CSharp
         m_MethodName: QuitGame
         m_Mode: 1
@@ -2544,8 +2588,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c9b85cb76b2c3440a27ffb997e46bff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isInBossPhase: 0
-  bossPrefab: {fileID: 0}
+  currentIslandIndex: 0
+  currentState: 0
+  OnGridInitialized: {fileID: 11400000, guid: 0bd11c8585f7e714a9f871c3ffa66e2b, type: 2}
+  GridIsReady: 0
+  OnPlayerDataLoaded: {fileID: 11400000, guid: b11344e0a9708b24d9dfce7ea824c720, type: 2}
+  PlayerDataIsLoaded: 0
+  OnWaveCompleted: {fileID: 11400000, guid: 047dbaad262210b44bf0d4ec1b013cea, type: 2}
+  OnMinibossCompleted: {fileID: 11400000, guid: b7aaa9baa387f4541a3de102c22ed466, type: 2}
+  OnBossCompleted: {fileID: 11400000, guid: 64ef2a14217c714428fd26fe63e53e58, type: 2}
+  OnIslandReadyForWave: {fileID: 11400000, guid: 3cf65725be6108c4aa4995cfaea4c4fa, type: 2}
+  OnIslandReadyForMiniboss: {fileID: 11400000, guid: 10ecfa85ea52f98458ccb91b1ef30ddc, type: 2}
+  OnIslandReadyForBoss: {fileID: 11400000, guid: e8f96561a027c4c49b39305393e20e23, type: 2}
 --- !u!1 &574901725
 GameObject:
   m_ObjectHideFlags: 0
@@ -2559,7 +2613,7 @@ GameObject:
   - component: {fileID: 574901728}
   - component: {fileID: 574901727}
   m_Layer: 5
-  m_Name: Reload Resources
+  m_Name: RefreshIslandButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2572,17 +2626,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 574901725}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 609472980}
-  m_Father: {fileID: 1803818028}
+  m_Father: {fileID: 443990160}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -70, y: 2.5072632}
+  m_AnchoredPosition: {x: -125, y: 54.25363}
   m_SizeDelta: {x: 250, y: 75}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &574901727
@@ -2631,7 +2685,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 273331279}
         m_TargetAssemblyTypeName: WaveManager, Assembly-CSharp
-        m_MethodName: RefreshIsland
+        m_MethodName: RefreshCurrentWave
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3065,6 +3119,37 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &690408885
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 690408886}
+  m_Layer: 0
+  m_Name: MinibossManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &690408886
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 690408885}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.28997418, y: 1.8114496, z: 1.3064797}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -4652,13 +4737,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridCellSize: 1
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 1
-  floorPlatform: {fileID: 1471673928}
   floorXSize: 0
   floorZSize: 0
-  spawningHeightOffset: 0
+  excludedLayers:
+    serializedVersion: 2
+    m_Bits: 64
+  floorPlatform: {fileID: 1471673928}
+  floorCenter: {x: 0, y: 0, z: 0}
+  floorOrigin: {x: 0, y: 0, z: 0}
+  OnGridInitialized: {fileID: 11400000, guid: 0bd11c8585f7e714a9f871c3ffa66e2b, type: 2}
 --- !u!4 &1050857678
 Transform:
   m_ObjectHideFlags: 0
@@ -5169,6 +5256,37 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6044903451608928376, guid: 3835c128f3f3fe14e8daeb377872eb59, type: 3}
   m_PrefabInstance: {fileID: 1159428658}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1193374443
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1193374444}
+  m_Layer: 0
+  m_Name: BossManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1193374444
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1193374443}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.28997418, y: 1.8114496, z: 1.3064797}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1247945293 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4205435941179241452, guid: 3835c128f3f3fe14e8daeb377872eb59, type: 3}
@@ -5666,7 +5784,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 417483144}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PauseMenuScript, Assembly-CSharp
         m_MethodName: ClosePauseMenu
         m_Mode: 1
@@ -7063,7 +7181,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 417483144}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PauseMenuScript, Assembly-CSharp
         m_MethodName: OpenPauseMenu
         m_Mode: 1
@@ -7211,8 +7329,7 @@ RectTransform:
   - {fileID: 1913460056}
   - {fileID: 1980123692}
   - {fileID: 126488812}
-  - {fileID: 574901726}
-  - {fileID: 393408333}
+  - {fileID: 443990160}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -7235,7 +7352,13 @@ MonoBehaviour:
   dreamEssencesText: {fileID: 2060326856}
   soulEssencesText: {fileID: 1247945293}
   humanSoulText: {fileID: 1303346643}
+  DreamEssenceChangedEvent: {fileID: 11400000, guid: 4b3f0f3f608d8924f9b10bbbe232f56e, type: 2}
+  SoulEssenceChangedEvent: {fileID: 11400000, guid: 37da2cf606bdbdd4e891b066e815b71d, type: 2}
+  HumanSoulChangedEvent: {fileID: 11400000, guid: 829409df2e908ca4c87ec3ddd9c1bb3a, type: 2}
+  WaveChangedEvent: {fileID: 11400000, guid: 256a1e73470d43a4f8e657357bd222f0, type: 2}
   waveText: {fileID: 1980123693}
+  continueToBossButton: {fileID: 0}
+  refreshIslandButton: {fileID: 0}
 --- !u!1 &1838960386
 GameObject:
   m_ObjectHideFlags: 0
@@ -8194,7 +8317,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 417483144}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PauseMenuScript, Assembly-CSharp
         m_MethodName: BackToMainMenu
         m_Mode: 1
@@ -9070,14 +9193,16 @@ SceneRoots:
   - {fileID: 705507995}
   - {fileID: 73031342}
   - {fileID: 1471673932}
-  - {fileID: 489177717}
-  - {fileID: 208018856}
-  - {fileID: 1050857678}
   - {fileID: 682686690}
-  - {fileID: 273331280}
   - {fileID: 1803818028}
   - {fileID: 1928638339}
   - {fileID: 417483143}
-  - {fileID: 546531562}
   - {fileID: 419756840}
   - {fileID: 515590538}
+  - {fileID: 273331280}
+  - {fileID: 690408886}
+  - {fileID: 1193374444}
+  - {fileID: 546531562}
+  - {fileID: 1050857678}
+  - {fileID: 208018856}
+  - {fileID: 489177717}
