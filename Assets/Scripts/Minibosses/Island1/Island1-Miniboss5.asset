@@ -16,5 +16,7 @@ MonoBehaviour:
   dialogue: I let them in, I gave them peace. In return they threw me out and seized
     my child.
   health: 262
+  dreamEssenceDrop: 163
   soulEssenceDrop: 259
+  humanSoulDrop: 0
   minibossSprite: {fileID: 0}

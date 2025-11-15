@@ -5,10 +5,8 @@ using UnityEngine.UI;
 
 public class BaseMiniboss : ClickableEntity
 {
-
     protected Canvas objectsCanvas;
-    public string dialogue;
-
+    
     public MinibossSO minibossData;
 
     [Header("Health Bar Elements")]
@@ -25,6 +23,12 @@ public class BaseMiniboss : ClickableEntity
     public int timeLimit;
     public Coroutine timerCoroutine;
 
+    [Header("Dialogue Elements")]
+    [SerializeField] protected GameObject dialogueObject;
+    public string dialogue;
+    public Coroutine dialogueCoroutine;
+    protected TextMeshProUGUI dialogueText;
+
     void Start()
     {
         Initialize();
@@ -32,8 +36,7 @@ public class BaseMiniboss : ClickableEntity
 
     public override void Initialize()
     {
-        Debug.Log("Initializing Boss Type Entity: " + miniBossName + " with Health: " + CurrentHealth);
-        
+        Debug.Log("Initializing Boss Type Entity with data: " + minibossData);
         // Base Stats
         MaxHealth = minibossData.health;
         CurrentHealth = MaxHealth;
@@ -60,6 +63,13 @@ public class BaseMiniboss : ClickableEntity
             {
                 timerBarObject = child.gameObject;
                 timerBarObject.SetActive(true);
+                continue;
+            }
+
+            if (child.name == "DialogueObject")
+            {
+                dialogueObject = child.gameObject;
+                dialogueObject.SetActive(false);
                 continue;
             }
 
@@ -92,6 +102,13 @@ public class BaseMiniboss : ClickableEntity
                 healthBarObject.SetActive(true);
                 continue;
             }
+
+            if(child.name == "DialogueText")
+            {
+                dialogueText = child.GetComponent<TextMeshProUGUI>();
+                dialogueText.text = "";
+                continue;
+            }
         }
         StartCoroutine(FillUpHealthBar());
         StartCoroutine(FillUpTimerBar());
@@ -111,6 +128,7 @@ public class BaseMiniboss : ClickableEntity
         // Debug.Log("Health Bar Filled");
         healthText.gameObject.SetActive(true);
         isClickable = true;
+
         // Start the timer coroutine once the health bar is fulLly filled
         timerCoroutine = StartCoroutine(TimerCoroutine());
     }
@@ -143,16 +161,50 @@ public class BaseMiniboss : ClickableEntity
         timerBarObject.SetActive(false);
 
         //Time's up, handle miniboss failure in wave manager
-        
+        MinibossManager.Instance.OnMinibossFailed.RaiseEvent(WaveManager.Instance.currentWaveData.waveNumber - 2);
+        FailedMiniboss();
     }
     
     public override void OnClick()
     {
         if (!isClickable)
         {
+            Debug.Log("Miniboss not clickable yet.");
             return;
         }
-        CurrentHealth -= PlayerDataManager.Instance.DamagePerClick;
+
+        if (CurrentHealth > 0)
+        {
+            // Debug.Log("Damaging Miniboss");
+            CurrentHealth -= CalculateClickDamage();
+            healthBar.fillAmount = (float) CurrentHealth / MaxHealth;
+            healthText.text = CurrentHealth.ToString() + " / " + MaxHealth.ToString();
+        }
+
+        if (CurrentHealth <= 0)
+        {
+            Debug.Log("Miniboss already at 0 health");
+            HandleDestroy();
+        }
+    }
+
+    public int CalculateClickDamage()
+    {
+        int baseDamage = PlayerDataManager.Instance.currentDamagePerClick;
+        // See if it crits or not
+        float critChance = PlayerDataManager.Instance.currentCritChance;
+
+        // Random from 0 to 1
+        float roll = Random.Range(0f, 1f);
+        if (roll <= critChance)
+        {
+            // Debug.Log("Critical Hit!");
+            float critDmgMultiplier = PlayerDataManager.Instance.currentCritDamageMultiplier;
+            int critDamage =  baseDamage + (int) (baseDamage *  critDmgMultiplier);
+            return critDamage;
+        }
+        // Debug.Log("Normal Hit");
+        return baseDamage;
     }
 
     public override void OnHover()
@@ -167,19 +219,45 @@ public class BaseMiniboss : ClickableEntity
 
     public override void HandleDestroy()
     {
-        GridManager.Instance.SetCellOccupied(OccupiedGridPositions, false);
-        PlayerDataManager.Instance.AddDreamEssence(DreamEssenceDrop);
-        PlayerDataManager.Instance.AddSoulEssence(SoulEssenceDrop);
-        PlayerDataManager.Instance.AddHumanSoul(HumanSoulDrop);
+        if (isClickable)
+        {
+            if (timerCoroutine != null)
+            {
+                StopCoroutine(timerCoroutine);
+            }
 
-        // Show Dialogue on top here
+            GridManager.Instance.SetCellOccupied(OccupiedGridPositions, false);
+            int totalDreamEssenceDrop = PlayerDataManager.Instance.currentDreamEssenceDropIncrease + DreamEssenceDrop;
+            PlayerDataManager.Instance.AddDreamEssence(totalDreamEssenceDrop);
+            PlayerDataManager.Instance.AddSoulEssence(SoulEssenceDrop);
+            PlayerDataManager.Instance.AddHumanSoul(HumanSoulDrop);
 
+            healthBarObject.SetActive(false);
+            timerBarObject.SetActive(false);
+            
+            // Show Dialogue on top here
+            MinibossManager.Instance.OnMinibossCompleted.RaiseEvent(WaveManager.Instance.currentWaveData.waveNumber);
+            IslandManager.Instance.DisplayDialogue(dialogue, dialogueText, dialogueObject);
+            Destroy(gameObject);
+            
+            // Can add effects here too
+        }
+    }
 
-        Destroy(gameObject);
+    public void FailedMiniboss()
+    {
+        if (isClickable)
+        {
+            if (timerCoroutine != null)
+            {
+                StopCoroutine(timerCoroutine);
+            }
 
-        MinibossManager.Instance.OnMinibossCompleted.RaiseEvent(WaveManager.Instance.currentWaveData.waveNumber);
-        
-        // Can add effects here too
-        
+            GridManager.Instance.SetCellOccupied(OccupiedGridPositions, false);
+            healthBarObject.SetActive(false);
+            timerBarObject.SetActive(false);
+
+            Destroy(gameObject);
+        }
     }
 }

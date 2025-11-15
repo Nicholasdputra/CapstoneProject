@@ -15,5 +15,7 @@ MonoBehaviour:
   minibossName: Abigail - Wrath
   dialogue: Why had I welcome them? Why did I shelter those the outcast and the stray.
   health: 59
+  dreamEssenceDrop: 105
   soulEssenceDrop: 110
+  humanSoulDrop: 0
   minibossSprite: {fileID: 0}

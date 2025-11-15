@@ -15,5 +15,7 @@ MonoBehaviour:
   minibossName: Abigail - Wrath
   dialogue: 'Walls crumbled as Mother Earth trembled. Where was my child?! '
   health: 5148
+  dreamEssenceDrop: 392
   soulEssenceDrop: 1442
+  humanSoulDrop: 0
   minibossSprite: {fileID: 0}

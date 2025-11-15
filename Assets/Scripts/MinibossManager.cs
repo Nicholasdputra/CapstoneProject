@@ -12,9 +12,12 @@ public class MinibossManager : MonoBehaviour
 
     [Header("Events | Broadcasting")]
     public IntEventChannel OnMinibossCompleted;
+    public IntEventChannel OnMinibossFailed;
 
+    public float YOffset;
     public GameObject minibossPrefab;
     public MinibossSO currentMinibossDetails;
+    public GameObject currentMinibossInstance;
 
     private void Awake()
     {
@@ -26,6 +29,11 @@ public class MinibossManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    public void Start()
+    {
+        CalculateYOffsetForMiniboss();
     }
 
     private void OnEnable()
@@ -48,32 +56,65 @@ public class MinibossManager : MonoBehaviour
 
     private void SpawnMiniboss(MinibossSO minibossData)
     {
-        GameObject objectToSpawn = minibossPrefab;
-        BaseObject baseObjectComponent = objectToSpawn.GetComponent<BaseObject>();
+        ClickableEntity clickableEntity = minibossPrefab.GetComponent<ClickableEntity>();
+
+        // if (clickableEntity == null)
+        // {
+        //     Debug.LogError("The miniboss prefab does not have a ClickableEntity component.");
+        //     return;
+        // }
+        // if (GridManager.Instance == null)
+        // {
+        //     Debug.LogError("GridManager Instance is null. Cannot spawn miniboss.");
+        //     return;
+        // }
 
         // Get the base world position (center of tile)
         Vector3 spawnPos = GridManager.Instance.GetRandomFreeTilePosition(
-            baseObjectComponent.XSize,
-            baseObjectComponent.ZSize
+            clickableEntity.XSize,
+            clickableEntity.ZSize
         );
 
         // Apply an offset so pivot = bottom-left corner
-        float cellSize = GridManager.Instance.gridCellSize; // or whatever your tile size var is called
-        spawnPos.x += (baseObjectComponent.XSize * cellSize) / 2f - (cellSize / 2f);
-        spawnPos.z += (baseObjectComponent.ZSize * cellSize) / 2f - (cellSize / 2f);
+        float cellSize = GridManager.Instance.gridCellSize;
+        spawnPos.x += (clickableEntity.XSize * cellSize) / 2f - (cellSize / 2f);
+        spawnPos.z += (clickableEntity.ZSize * cellSize) / 2f - (cellSize / 2f);
+        spawnPos.y += YOffset / 2f;
 
         // Instantiate
-        GameObject spawnedObject = Instantiate(objectToSpawn, spawnPos, Quaternion.identity);
-        spawnedObject.name = $"Miniboss_{minibossData.minibossName}_Wave{WaveManager.Instance.currentWaveData.waveNumber}";
+        currentMinibossInstance = Instantiate(minibossPrefab, spawnPos, Quaternion.identity);
+        currentMinibossInstance.name = $"Miniboss_{minibossData.minibossName}_Wave{WaveManager.Instance.currentWaveData.waveNumber}";
 
         // Register in lists
-        BaseObject spawnedBaseObjectComponent = spawnedObject.GetComponent<BaseObject>();
+        ClickableEntity spawnedEntityClickableEntityComponent = currentMinibossInstance.GetComponent<ClickableEntity>();
 
         // Mark occupied cells
-        GridManager.Instance.SetUpOccupiedClickableEntityGridPositions(spawnedBaseObjectComponent);
+        GridManager.Instance.SetUpOccupiedClickableEntityGridPositions(spawnedEntityClickableEntityComponent);
 
         // Pass along miniboss data to the spawned miniboss
-        BaseMiniboss spawnedMinibossComponent = spawnedObject.GetComponent<BaseMiniboss>();
+        BaseMiniboss spawnedMinibossComponent = currentMinibossInstance.GetComponent<BaseMiniboss>();
         spawnedMinibossComponent.minibossData = minibossData;
     }
+
+    private void CalculateYOffsetForMiniboss()
+    {
+        Renderer rend = minibossPrefab.GetComponent<Renderer>();
+        if (rend != null)
+        {
+            if (rend.bounds.size.y > 0f)
+            {
+                YOffset = Mathf.CeilToInt(rend.bounds.size.y);
+            }
+            else
+            {
+                YOffset = 1;
+            }
+        }
+        else
+        {
+            YOffset = 1;
+        }
+    }
+
+    
 }

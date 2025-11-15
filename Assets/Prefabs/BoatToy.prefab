@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4568463507906665153}
   - component: {fileID: 2987653987756594077}
   - component: {fileID: 3400375693350188185}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BoatToy
   m_TagString: Untagged
   m_Icon: {fileID: 0}

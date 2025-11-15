@@ -15,5 +15,7 @@ MonoBehaviour:
   minibossName: Abigail - Wrath
   dialogue: They follow the man who promised them harmony through blood and war.
   health: 599
+  dreamEssenceDrop: 208
   soulEssenceDrop: 418
+  humanSoulDrop: 0
   minibossSprite: {fileID: 0}

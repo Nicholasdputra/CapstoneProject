@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 3135639122007427201}
   - component: {fileID: 2633487806323138319}
   - component: {fileID: 792771510523476636}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BaseMinibossPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -219,4 +219,4 @@ MonoBehaviour:
   timerBarObject: {fileID: 0}
   timerBar: {fileID: 0}
   timer: 0
-  timeLimit: 0
+  timeLimit: 20

@@ -15,5 +15,7 @@ MonoBehaviour:
   minibossName: Abigail - Wrath
   dialogue: I remember my son. My sweet innocent boy. You were just a child.
   health: 135
+  dreamEssenceDrop: 134
   soulEssenceDrop: 177
+  humanSoulDrop: 0
   minibossSprite: {fileID: 0}

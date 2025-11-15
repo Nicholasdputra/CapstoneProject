@@ -15,5 +15,7 @@ MonoBehaviour:
   minibossName: Abigail - Wrath
   dialogue: Laughter and warmth forged a bond, one I thought would last forever.
   health: 82
+  dreamEssenceDrop: 116
   soulEssenceDrop: 133
+  humanSoulDrop: 0
   minibossSprite: {fileID: 0}

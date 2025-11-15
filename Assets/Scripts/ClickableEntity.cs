@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class ClickableEntity : MonoBehaviour, IClickable
@@ -78,5 +75,4 @@ public abstract class ClickableEntity : MonoBehaviour, IClickable
     public abstract void OnUnhover();
     public abstract void OnClick();
     public abstract void HandleDestroy();
-    // public abstract void SetUpOccupiedGridPositions();
 }

@@ -1,17 +1,14 @@
 using UnityEngine;
-using System.Collections.Generic;
 
 public abstract class BaseObject : ClickableEntity
 {
     public ObjectType objectType;
-    protected PlayerSave currentPlayerSave;
 
     public override void Initialize()
     {
         isClickable = true;
         CurrentHealth = MaxHealth;
         SetUpOffset();
-        currentPlayerSave = PlayerDataManager.Instance.currentPlayerSave;
     }
 
     private void SetUpOffset()
@@ -54,7 +51,26 @@ public abstract class BaseObject : ClickableEntity
             return;
         }
 
-        CurrentHealth -= currentPlayerSave.damagePerClick;
+        CurrentHealth -= CalculateClickDamage();
+    }
+
+    public int CalculateClickDamage()
+    {
+        int baseDamage = PlayerDataManager.Instance.currentDamagePerClick;
+        // See if it crits or not
+        float critChance = PlayerDataManager.Instance.currentCritChance;
+
+        // Random from 0 to 1
+        float roll = Random.Range(0f, 1f);
+        if (roll <= critChance)
+        {
+            // Debug.Log("Critical Hit!");
+            float critDmgMultiplier = PlayerDataManager.Instance.currentCritDamageMultiplier;
+            int critDamage =  baseDamage + (int) (baseDamage *  critDmgMultiplier);
+            return critDamage;
+        }
+        // Debug.Log("Normal Hit");
+        return baseDamage;
     }
 
     public override void OnHover()
@@ -75,7 +91,8 @@ public abstract class BaseObject : ClickableEntity
             GridManager.Instance.SetCellOccupied(OccupiedGridPositions, false);
         else
             Debug.LogWarning("GridManager Instance is null when destroying BaseObject.");
-        PlayerDataManager.Instance.AddDreamEssence(DreamEssenceDrop);
+        int totalDreamEssenceDrop = PlayerDataManager.Instance.currentDreamEssenceDropIncrease + DreamEssenceDrop;
+        PlayerDataManager.Instance.AddDreamEssence(totalDreamEssenceDrop);
         // Debug.Log("Added Dream Essence: " + DreamEssenceDrop);
         PlayerDataManager.Instance.AddSoulEssence(SoulEssenceDrop);
         // Debug.Log("Added Soul Essence: " + SoulEssenceDrop);

@@ -12,7 +12,7 @@ public class BoatToy : BaseObject
     {
         Debug.Log("Initializing BoatToy");
         MaxHealth = 20;
-        DreamEssenceDrop = 45;
+        DreamEssenceDrop = 20;
         SoulEssenceDrop = 0;
         HumanSoulDrop = 0;
         base.Initialize();

@@ -9,7 +9,7 @@ public class WaveManager : MonoBehaviour
     public static WaveManager Instance;
     public IntEventChannel WaveChangedEvent;
 
-    public WaveData waveDataArray;
+    public WaveData[] waveDataArray;
     public WaveSO currentWaveData;
 
     public List<BaseObject> currentAliveEnemies;
@@ -31,9 +31,11 @@ public class WaveManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
+
             Destroy(gameObject);
         }
     }
@@ -78,9 +80,9 @@ public class WaveManager : MonoBehaviour
     public void StartWave(int waveIndex)
     {
         int adjustedIndex = waveIndex - 1;
-        if (adjustedIndex < waveDataArray.harvestableWaves.Length)
+        if (adjustedIndex < waveDataArray[IslandManager.Instance.CurrentIslandIndex].harvestableWaves.Length)
         {
-            currentWaveData = waveDataArray.harvestableWaves[adjustedIndex];
+            currentWaveData = waveDataArray[IslandManager.Instance.CurrentIslandIndex].harvestableWaves[adjustedIndex];
             WaveChangedEvent.RaiseEvent(currentWaveData != null ? currentWaveData.waveNumber : 1);
             SpawnObjectsForWave(currentWaveData);
         }

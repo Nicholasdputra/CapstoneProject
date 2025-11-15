@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 4250453873334501704}
   - component: {fileID: 448572857810209763}
   - component: {fileID: 5240589380293082926}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SandCastle
   m_TagString: Untagged
   m_Icon: {fileID: 0}

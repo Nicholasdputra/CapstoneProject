@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 409124680319911391}
   - component: {fileID: 3965876191318669121}
   - component: {fileID: 9027950076884374175}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PaperCrown
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -16,5 +16,7 @@ MonoBehaviour:
   dialogue: That girl offered me her aid in private. She promised me justice for
     my fallen boy.
   health: 19532
+  dreamEssenceDrop: 579
   soulEssenceDrop: 3091
+  humanSoulDrop: 0
   minibossSprite: {fileID: 0}

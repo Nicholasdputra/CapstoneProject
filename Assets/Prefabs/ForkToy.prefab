@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 9018405707952850504}
   - component: {fileID: 5857749450234489036}
   - component: {fileID: 2239042247869904995}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ForkToy
   m_TagString: Untagged
   m_Icon: {fileID: 0}

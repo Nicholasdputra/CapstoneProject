@@ -219,13 +219,13 @@ public class GridManager : MonoBehaviour
         // Debug.Log("Unoccupied Grid Positions: " + string.Join(", ", unoccupiedList));
     }
 
-    public void SetUpOccupiedClickableEntityGridPositions(ClickableEntity clickableEntitys)
+    public void SetUpOccupiedClickableEntityGridPositions(ClickableEntity clickableEntity)
     {
         // Convert the object's center to grid coordinates
-        Vector2Int centerGrid = ConvertPosFromWorldToGrid(clickableEntitys.transform.position);
+        Vector2Int centerGrid = ConvertPosFromWorldToGrid(clickableEntity.transform.position);
 
-        int sizeX = clickableEntitys.XSize;
-        int sizeZ = clickableEntitys.ZSize;
+        int sizeX = clickableEntity.XSize;
+        int sizeZ = clickableEntity.ZSize;
 
         // Compute half sizes to determine coverage area
         int halfX = Mathf.FloorToInt(sizeX / 2f);
@@ -242,11 +242,11 @@ public class GridManager : MonoBehaviour
             }
         }
 
-        clickableEntitys.OccupiedGridPositions = occupied.ToArray();
+        clickableEntity.OccupiedGridPositions = occupied.ToArray();
 
         // Debug.Log($"[{name}] Size: {sizeX}x{sizeZ}, Center Grid: {centerGrid}, Occupies: {string.Join(", ", OccupiedGridPositions)}");
 
-        SetCellOccupied(clickableEntitys.OccupiedGridPositions, true);
+        SetCellOccupied(clickableEntity.OccupiedGridPositions, true);
     }
     
     #if UNITY_EDITOR

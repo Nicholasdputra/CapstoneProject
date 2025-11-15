@@ -15,5 +15,7 @@ MonoBehaviour:
   minibossName: Abigail - Wrath
   dialogue: We used to be happy together in that lively house.
   health: 50
+  dreamEssenceDrop: 100
   soulEssenceDrop: 100
+  humanSoulDrop: 0
   minibossSprite: {fileID: 0}

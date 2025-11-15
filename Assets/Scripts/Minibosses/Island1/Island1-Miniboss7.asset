@@ -15,5 +15,7 @@ MonoBehaviour:
   minibossName: Abigail - Wrath
   dialogue: How vile must one be to bite the hand that feeds them?
   health: 1616
+  dreamEssenceDrop: 279
   soulEssenceDrop: 740
+  humanSoulDrop: 0
   minibossSprite: {fileID: 0}

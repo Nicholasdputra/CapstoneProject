@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 2120838832269444658}
   - component: {fileID: 131854092120588417}
   - component: {fileID: -8823832956215666362}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ShovelToy
   m_TagString: Untagged
   m_Icon: {fileID: 0}

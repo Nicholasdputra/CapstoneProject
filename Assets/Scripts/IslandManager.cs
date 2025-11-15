@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections;
+using TMPro;
 
 public enum IslandState
 {
@@ -32,7 +34,10 @@ public class IslandManager : MonoBehaviour
     
     public VoidEventChannel OnWaveCompleted;
     public IntEventChannel OnMinibossCompleted;
-    public VoidEventChannel OnBossCompleted;
+    public IntEventChannel OnBossCompleted;
+
+    public IntEventChannel OnMinibossFailed;
+    public IntEventChannel OnBossFailed;
 
     [Header("Broadcasting")]
     public VoidEventChannel OnIslandReadyForWave;
@@ -54,18 +59,32 @@ public class IslandManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    
+    private void Start()
+    {
+        CurrentIslandIndex = 0;
+    }
 
     private void OnEnable()
     {
         OnGridInitialized.OnEventRaised += HandleGridReady;
         OnPlayerDataLoaded.OnEventRaised += HandlePlayerDataLoaded;
         OnWaveCompleted.OnEventRaised += HandleWaveStateCompleted;
+        OnMinibossCompleted.OnEventRaised += HandleMinibossStateCompleted;
+        OnBossCompleted.OnEventRaised += HandleBossStateCompleted;
+        OnMinibossFailed.OnEventRaised += HandleMinibossStateCompleted;
+        OnBossFailed.OnEventRaised += HandleBossStateCompleted;
     }
 
     private void OnDisable()
     {
         OnGridInitialized.OnEventRaised -= HandleGridReady;
         OnPlayerDataLoaded.OnEventRaised -= HandlePlayerDataLoaded;
+        OnWaveCompleted.OnEventRaised -= HandleWaveStateCompleted;
+        OnMinibossCompleted.OnEventRaised -= HandleMinibossStateCompleted;
+        OnBossCompleted.OnEventRaised -= HandleBossStateCompleted;
+        OnMinibossFailed.OnEventRaised -= HandleMinibossStateCompleted;
+        OnBossFailed.OnEventRaised -= HandleBossStateCompleted;
     }
 
     private void HandleGridReady()
@@ -83,11 +102,47 @@ public class IslandManager : MonoBehaviour
     private void HandleWaveStateCompleted()
     {
         // Logic to determine next island state based on wave completion
-        if (currentState == IslandState.HarvestPhase)
+        if (currentState == IslandState.HarvestPhase && WaveManager.Instance.currentWaveData.waveNumber < WaveManager.MAXWAVESPERISLAND)
         {
+            Debug.Log("Transitioning to Miniboss Phase as current wave number is " + WaveManager.Instance.currentWaveData.waveNumber);
             currentState = IslandState.MinibossPhase;
         }
+        else if (currentState == IslandState.HarvestPhase && WaveManager.Instance.currentWaveData.waveNumber >= WaveManager.MAXWAVESPERISLAND)
+        {
+            Debug.Log("Transitioning to Boss Phase as max waves per island reached.");
+            currentState = IslandState.BossPhase;
+        }
 
+        CheckandImplementPhase();
+    }
+
+    private void HandleMinibossStateCompleted(int minibossWaveNumber)
+    {
+        // Logic to determine next island state based on miniboss completion
+        if (currentState == IslandState.MinibossPhase)
+        {
+            if (minibossWaveNumber >= WaveManager.MAXWAVESPERISLAND)
+            {
+                currentState = IslandState.BossPhase;
+            }
+            else
+            {
+                currentState = IslandState.HarvestPhase;
+            }
+        }
+        
+        CheckandImplementPhase();
+    }
+    
+    private void HandleBossStateCompleted(int waveNumber)
+    {
+        // Logic to handle island completion after boss is defeated
+        Debug.Log("Boss defeated! Continuing to the next resource island...");
+        if (currentState == IslandState.BossPhase)
+        {
+            CurrentIslandIndex += 1;
+            currentState = IslandState.HarvestPhase;
+        }
         CheckandImplementPhase();
     }
 
@@ -103,6 +158,7 @@ public class IslandManager : MonoBehaviour
 
     public void CheckandImplementPhase()
     {
+        Debug.Log("Implementing Island Phase: " + currentState.ToString());
         if (currentState == IslandState.HarvestPhase)
         {
             // Debug.Log("Harvest Phase Triggered");
@@ -122,5 +178,66 @@ public class IslandManager : MonoBehaviour
             // Implement Boss Phase Logic
             OnIslandReadyForBoss.RaiseEvent();
         }
+    }
+
+    public void DisplayDialogue(string dialogue, TextMeshProUGUI dialogueText, GameObject dialogueObject)
+    {
+        StartCoroutine(DisplayDialogueCoroutine(dialogue, dialogueText, dialogueObject));
+    }   
+
+    public IEnumerator DisplayDialogueCoroutine(string dialogue, TextMeshProUGUI dialogueText, GameObject dialogueObject)
+    {
+        if (dialogueText == null)
+        {
+            Debug.LogError("DialogueText UI object NOT FOUND in ObjectsCanvas.");
+            yield break;
+        }
+
+        // Initialize dialogue display
+        Debug.Log("Starting Dialogue Display: " + dialogue);
+        dialogueObject.SetActive(true);
+        dialogueText.text = "";
+        Color originalColor = dialogueText.color;
+        originalColor.a = 1f;
+        dialogueText.color = originalColor;
+
+        // Type letter by letter
+        Debug.Log("Typing out dialogue...");
+        float typeSpeed = 0.02f;
+        foreach (char letter in dialogue.ToCharArray())
+        {
+            dialogueText.text += letter;
+            yield return new WaitForSeconds(typeSpeed);
+        }
+
+        // Show the fully typed text for a few seconds
+        yield return new WaitForSeconds(3f);
+
+        // Fade out the dialogue
+        float fadeDuration = 1f;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < fadeDuration)
+        {
+            float t = elapsedTime / fadeDuration;
+            Color c = dialogueText.color;
+            c.a = Mathf.Lerp(1f, 0f, t);
+            dialogueText.color = c;
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        // Ensure it's fully transparent at the end
+        Debug.Log("Fading out dialogue...");
+        Color final = dialogueText.color;
+        final.a = 0f;
+        dialogueText.color = final;
+
+        // Deactivate and clean up dialogue object
+        Debug.Log("Dialogue display complete.");
+        dialogueObject.SetActive(false);
+        dialogueText.text = "";
+        originalColor.a = 1f;
+        dialogueText.color = originalColor;
     }
 }
