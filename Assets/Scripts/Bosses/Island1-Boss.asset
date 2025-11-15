@@ -18,5 +18,5 @@ MonoBehaviour:
   health: 85834
   dreamEssenceDrop: 899
   soulEssenceDrop: 7289
-  humanSoulDrop: 0
-  bossSprite: {fileID: 0}
+  humanSoulDrop: 1
+  bossSprite: {fileID: 21300000, guid: 5e9f376fd45c81148abe8468fb0d1c7d, type: 3}

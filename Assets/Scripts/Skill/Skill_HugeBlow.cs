@@ -6,6 +6,7 @@ public class Skill_HugeBlow : BaseSkill
 {
     void Start()
     {
+        InitializeButton();
         InitializeSkill();
     }
 

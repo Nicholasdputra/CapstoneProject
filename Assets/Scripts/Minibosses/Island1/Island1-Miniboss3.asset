@@ -18,4 +18,4 @@ MonoBehaviour:
   dreamEssenceDrop: 116
   soulEssenceDrop: 133
   humanSoulDrop: 0
-  minibossSprite: {fileID: 0}
+  minibossSprite: {fileID: 21300000, guid: 8d1de7aef6b98954faa10d6f6d67f6bc, type: 3}

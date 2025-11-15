@@ -6,6 +6,7 @@ public class Skill_SurfacePressure : BaseSkill
 {
     void Start()
     {
+        InitializeButton();
         InitializeSkill();
     }
 

@@ -5,7 +5,7 @@ using UnityEngine;
 public class WaveManager : MonoBehaviour
 {
     public static int MAXWAVESPERISLAND = 10;
-
+    GridManager gridManager;
     public static WaveManager Instance;
     public IntEventChannel WaveChangedEvent;
 
@@ -101,13 +101,17 @@ public class WaveManager : MonoBehaviour
             BaseObject baseObjectComponent = objectToSpawn.GetComponent<BaseObject>();
 
             // Get the base world position (center of tile)
-            Vector3 spawnPos = GridManager.Instance.GetRandomFreeTilePosition(
+            if (gridManager == null)
+            {
+                gridManager = GameObject.FindObjectOfType<GridManager>();
+            }
+            Vector3 spawnPos = gridManager.GetRandomFreeTilePosition(
                 baseObjectComponent.XSize,
                 baseObjectComponent.ZSize
             );
 
             // Apply an offset so pivot = bottom-left corner
-            float cellSize = GridManager.Instance.gridCellSize; // or whatever your tile size var is called
+            float cellSize = gridManager.gridCellSize; // or whatever your tile size var is called
             spawnPos.x += (baseObjectComponent.XSize * cellSize) / 2f - (cellSize / 2f);
             spawnPos.z += (baseObjectComponent.ZSize * cellSize) / 2f - (cellSize / 2f);
 
@@ -120,7 +124,7 @@ public class WaveManager : MonoBehaviour
             currentAliveEnemies.Add(spawnedBaseObjectComponent);
 
             // Mark occupied cells
-            GridManager.Instance.SetUpOccupiedClickableEntityGridPositions(spawnedBaseObjectComponent);
+            gridManager.SetUpOccupiedClickableEntityGridPositions(spawnedBaseObjectComponent);
         }
     }
     
@@ -156,6 +160,7 @@ public class WaveManager : MonoBehaviour
 
     public void GoToMiniboss()
     {
+        postWaveClearButtons.SetActive(false);
         OnWaveCompleted.RaiseEvent();
     }
 }

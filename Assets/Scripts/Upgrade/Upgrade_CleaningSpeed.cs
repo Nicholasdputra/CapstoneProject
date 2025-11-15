@@ -6,7 +6,9 @@ public class Upgrade_CleaningSpeed : BaseUpgrade
 
     public void Start()
     {
+        upgradeID = "Upgrade_CleaningSpeed";
         DecideEffect();
+        maxUpgradeTier = 10;
     }
 
     public override void DecideEffect()
@@ -76,5 +78,6 @@ public class Upgrade_CleaningSpeed : BaseUpgrade
                 break;
         }
         pdm.BaseAutoCleaningSpeed = 1 + cleaningSpeedIncrease;
+        upgradeDescription = $"Set auto cleaning speed to {(1+cleaningSpeedIncrease) * 100}%";
     }
 }

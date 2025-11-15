@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 public class InputManager : MonoBehaviour
 {
+    GridManager gridManager;
     public static InputManager Instance;
     public LayerMask excludedLayers;
 
@@ -13,6 +14,7 @@ public class InputManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -27,6 +29,8 @@ public class InputManager : MonoBehaviour
 
     private void Update()
     {
+        if (!cam)
+            cam = Camera.main;
         HandleHover();
         HandleClick();
     }
@@ -49,9 +53,10 @@ public class InputManager : MonoBehaviour
 
     void HandleClick()
     {
+        AudioManager.Instance.PlaySFXOnce(1);
         if (!Input.GetMouseButtonDown(0))
             return;
-
+        Debug.Log("Mouse Click Detected");
         Vector2Int? hoveredGrid = GetHoveredGridCell();
         // Debug.Log("Clicked at grid: " + (hoveredGrid.HasValue ? hoveredGrid.Value.ToString() : "null"));
         if (hoveredGrid == null)
@@ -59,12 +64,12 @@ public class InputManager : MonoBehaviour
             return;
         }
         int radius = PlayerDataManager.Instance.currentHarvestRadius;
-        // Debug.Log("Click radius: " + radius);
+        Debug.Log("Click radius: " + radius);
         List<ClickableEntity> entities = GetEntitiesInRadius(hoveredGrid.Value, radius);
-        // Debug.Log("Entities list members: " + string.Join(", ", entities));
+        Debug.Log("Entities list members: " + string.Join(", ", entities));
         foreach (var entity in entities)
         {
-            // Debug.Log("Clicking on entity: " + entity.name);
+            Debug.Log("Clicking on entity: " + entity.name);
             entity.OnClick(); // Call the click event
         }
     }
@@ -76,7 +81,10 @@ public class InputManager : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, 200f, ~excludedLayers))
         {
-            return GridManager.Instance.ConvertPosFromWorldToGrid(hit.point);
+
+            gridManager = GameObject.FindObjectOfType<GridManager>();
+
+            return gridManager.ConvertPosFromWorldToGrid(hit.point);
         }
 
         return null;
@@ -143,7 +151,7 @@ public class InputManager : MonoBehaviour
             {
                 if (!results.Contains(miniBoss))
                 {
-                    Debug.Log("Miniboss detected in radius at grid position: " + gridPos);
+                    // Debug.Log("Miniboss detected in radius at grid position: " + gridPos);
                     results.Add(miniBoss);
                 }
                 

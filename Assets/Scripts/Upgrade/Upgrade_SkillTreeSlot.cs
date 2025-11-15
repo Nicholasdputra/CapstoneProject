@@ -8,7 +8,9 @@ public class Upgrade_SkillTreeSlot : BaseUpgrade
 
     public void Start()
     {
+        upgradeID = "Upgrade_SkillTreeSlot";
         DecideEffect();
+        maxUpgradeTier = 5;
     }
 
     public override void DecideEffect()
@@ -53,5 +55,6 @@ public class Upgrade_SkillTreeSlot : BaseUpgrade
                 break;
         }
         sm.maxSkillTreeSlots = 2+addedSkillTreeSlots;
+        upgradeDescription = $"Set max skill tree slots to {sm.maxSkillTreeSlots}";
     }
 }

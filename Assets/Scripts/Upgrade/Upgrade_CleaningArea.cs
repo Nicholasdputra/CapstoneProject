@@ -8,7 +8,9 @@ public class Upgrade_CleaningArea : BaseUpgrade
 
     public void Start()
     {
+        upgradeID = "Upgrade_CleaningArea";
         DecideEffect();
+        maxUpgradeTier = 5;
     }
 
     public override void DecideEffect()
@@ -54,5 +56,10 @@ public class Upgrade_CleaningArea : BaseUpgrade
                 break;
         }
         pdm.currentHarvestRadius = harvestAreaIncrease;
+
+        if (upgradeTier <= 5)
+        {
+            upgradeDescription = $"Increase the cleaning area by {harvestAreaIncrease} unit(s).";
+        }
     }
 }

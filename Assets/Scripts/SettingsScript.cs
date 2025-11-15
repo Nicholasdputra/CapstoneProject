@@ -38,6 +38,7 @@ public class SettingsScript : MonoBehaviour
     // Open settings panel
     public void OpenSettings()
     {
+        AudioManager.Instance.PlaySFXOnce(0);
         if (settingsPanel != null)
         {
             settingsPanel.SetActive(true);
@@ -47,6 +48,7 @@ public class SettingsScript : MonoBehaviour
     // Close settings panel
     public void CloseSettings()
     {
+        AudioManager.Instance.PlaySFXOnce(0);
         if (settingsPanel != null)
         {
             settingsPanel.SetActive(false);

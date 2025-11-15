@@ -6,6 +6,7 @@ public class Skill_BigSweep : BaseSkill
 {
     void Start()
     {
+        InitializeButton();
         InitializeSkill();
     }
 

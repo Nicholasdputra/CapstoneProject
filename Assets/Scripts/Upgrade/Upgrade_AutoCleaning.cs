@@ -6,6 +6,8 @@ public class Upgrade_AutoCleaning : BaseUpgrade
 
     public void Start()
     {
+        upgradeID = "Upgrade_AutoCleaning";
+        maxUpgradeTier = 15;
         DecideEffect();
     }
 
@@ -102,5 +104,18 @@ public class Upgrade_AutoCleaning : BaseUpgrade
                 break;
         }
         pdm.BaseAutoCleaningDamage = 1 + (int)autoDamage;
+
+        if (upgradeTier < 6)
+        {
+            upgradeDescription = "Automatically deal " + autoDamage.ToString("F0") + " damage per second to the mess.";
+        }
+        else if (upgradeTier < 11)
+        {
+            upgradeDescription = "Automatically deal " + autoDamage.ToString("F0") + " damage per second to the mess.";
+        }
+        else
+        {
+            upgradeDescription = "Automatically deal " + autoDamage.ToString("F0") + " damage per second to the mess.";
+        }
     }
 }

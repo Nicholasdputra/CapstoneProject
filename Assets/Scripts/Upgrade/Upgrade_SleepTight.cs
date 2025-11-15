@@ -8,7 +8,9 @@ public class Upgrade_SleepTight : BaseUpgrade
 
     public void Start()
     {
+        upgradeID = "Upgrade_SleepTight";
         DecideEffect();
+        maxUpgradeTier = 10;
     }
 
     public override void DecideEffect()
@@ -78,5 +80,6 @@ public class Upgrade_SleepTight : BaseUpgrade
                 break;
         }
         pdm.BaseDreamEssenceDropIncrease = dreamEssenceDropIncrease;
+        upgradeDescription = $"Gain an additional {pdm.BaseDreamEssenceDropIncrease} dream essences when cleaning";
     }
 }

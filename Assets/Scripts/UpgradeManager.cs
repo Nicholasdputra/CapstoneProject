@@ -43,8 +43,18 @@ public class UpgradeManager : MonoBehaviour
         upgradesDict.Clear();
 
         BaseUpgrade[] upgradesInScene = FindObjectsOfType<BaseUpgrade>();
+
+        if (upgradesInScene.Length == 0)
+        {
+            Debug.LogWarning("No upgrades found in scene!");
+        } 
+        else
+        {
+            Debug.Log($"Found {upgradesInScene.Length} upgrades in scene.");
+        }
         foreach (BaseUpgrade upgrade in upgradesInScene)
         {
+            Debug.Log($"Registering upgrade ID: {upgrade.upgradeID}");
             if (!upgradesDict.ContainsKey(upgrade.upgradeID))
             {
                 upgradesDict.Add(upgrade.upgradeID, upgrade);
@@ -84,7 +94,7 @@ public class UpgradeManager : MonoBehaviour
 
         up.upgradeTier++;
         up.DecideEffect();
-
+        AudioManager.Instance.PlaySFXOnce(5);
         PlayerDataManager.Instance.SaveUpgrades();  // << SAVE AFTER UPGRADING
 
         Debug.Log($"Upgraded {id} to tier {up.upgradeTier}!");

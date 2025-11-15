@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public enum IslandState
 {
@@ -45,10 +46,16 @@ public class IslandManager : MonoBehaviour
     public VoidEventChannel OnIslandReadyForBoss;
 
     #endregion
-    
+    GridManager gridManager;
 
     private void Awake()
     {
+        if(Instance != null && Instance != this)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+
         if (Instance == null)
         {
             Instance = this;
@@ -62,6 +69,7 @@ public class IslandManager : MonoBehaviour
     
     private void Start()
     {
+        AudioManager.Instance.PlayBGMLoop(1);
         CurrentIslandIndex = 0;
     }
 
@@ -104,12 +112,12 @@ public class IslandManager : MonoBehaviour
         // Logic to determine next island state based on wave completion
         if (currentState == IslandState.HarvestPhase && WaveManager.Instance.currentWaveData.waveNumber < WaveManager.MAXWAVESPERISLAND)
         {
-            Debug.Log("Transitioning to Miniboss Phase as current wave number is " + WaveManager.Instance.currentWaveData.waveNumber);
+            // Debug.Log("Transitioning to Miniboss Phase as current wave number is " + WaveManager.Instance.currentWaveData.waveNumber);
             currentState = IslandState.MinibossPhase;
         }
         else if (currentState == IslandState.HarvestPhase && WaveManager.Instance.currentWaveData.waveNumber >= WaveManager.MAXWAVESPERISLAND)
         {
-            Debug.Log("Transitioning to Boss Phase as max waves per island reached.");
+            // Debug.Log("Transitioning to Boss Phase as max waves per island reached.");
             currentState = IslandState.BossPhase;
         }
 
@@ -163,21 +171,53 @@ public class IslandManager : MonoBehaviour
         {
             // Debug.Log("Harvest Phase Triggered");
             // Implement Harvest Phase Logic
+            
+            // Clear grid occupied positions from previous phases if needed
+            
+            gridManager = GameObject.FindObjectOfType<GridManager>();
+            
+            gridManager.ClearAllOccupiedPositions();
             OnIslandReadyForWave.RaiseEvent();
         }
         else if (currentState == IslandState.MinibossPhase)
         {
             // Debug.Log("Miniboss Phase Triggered");
             // Implement Miniboss Phase Logic
+
+            gridManager = GameObject.FindObjectOfType<GridManager>();
+
+            gridManager.ClearAllOccupiedPositions();
             OnIslandReadyForMiniboss.RaiseEvent();
 
         }
         else if (currentState == IslandState.BossPhase)
         {
             // Debug.Log("Boss Phase Triggered");
-            // Implement Boss Phase Logic
-            OnIslandReadyForBoss.RaiseEvent();
+            // Move to boss island scene
+            AudioManager.Instance.PlayBGMLoop(2);
+            gridManager = GameObject.FindObjectOfType<GridManager>();
+
+            if (SceneManager.GetActiveScene().name != "BossIsland" + (CurrentIslandIndex + 1).ToString())
+            {
+                StartCoroutine(LoadBossSceneAndTriggerEvent());
+            }
         }
+    }
+
+    private IEnumerator LoadBossSceneAndTriggerEvent()
+    {
+        string sceneName = "BossIsland" + (CurrentIslandIndex + 1).ToString();
+        GridManager gridManager = GameObject.FindObjectOfType<GridManager>();
+        AudioManager.Instance.PlayBGMLoop(2);
+        AsyncOperation op = SceneManager.LoadSceneAsync(sceneName);
+
+        // Wait until scene is fully loaded
+        while (!op.isDone)
+            yield return null;
+
+        // Now the scene is ready → NOW spawn boss
+        Debug.Log("Boss Scene Loaded Successfully. Triggering OnIslandReadyForBoss.");
+        OnIslandReadyForBoss.RaiseEvent();
     }
 
     public void DisplayDialogue(string dialogue, TextMeshProUGUI dialogueText, GameObject dialogueObject)
@@ -187,6 +227,7 @@ public class IslandManager : MonoBehaviour
 
     public IEnumerator DisplayDialogueCoroutine(string dialogue, TextMeshProUGUI dialogueText, GameObject dialogueObject)
     {
+        AudioManager.Instance.PlaySFXOnce(3);
         if (dialogueText == null)
         {
             Debug.LogError("DialogueText UI object NOT FOUND in ObjectsCanvas.");
@@ -235,9 +276,12 @@ public class IslandManager : MonoBehaviour
 
         // Deactivate and clean up dialogue object
         Debug.Log("Dialogue display complete.");
-        dialogueObject.SetActive(false);
-        dialogueText.text = "";
-        originalColor.a = 1f;
-        dialogueText.color = originalColor;
+        if (dialogueObject != null)
+        {
+            dialogueObject.SetActive(false);
+            dialogueText.text = "";
+            originalColor.a = 1f;
+            dialogueText.color = originalColor;
+        }
     }
 }

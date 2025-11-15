@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System.Collections;
 
 public class PlayerHUD : MonoBehaviour
 {
@@ -16,6 +17,21 @@ public class PlayerHUD : MonoBehaviour
     public TextMeshProUGUI waveText;
     public Button continueToBossButton;
     public Button refreshIslandButton;
+
+    public static PlayerHUD Instance;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);  
+        }
+    }
 
     private void OnEnable()
     {
@@ -56,5 +72,41 @@ public class PlayerHUD : MonoBehaviour
             return;
         } 
         waveText.text = "Wave " + WaveManager.Instance.currentWaveData.waveNumber.ToString() + " / " + WaveManager.MAXWAVESPERISLAND.ToString();
+    }
+
+    public void CallShowDamageNumber(Vector3 position, int damageAmount)
+    {
+        StartCoroutine(ShowDamageNumber(position, damageAmount));
+    }
+
+    public IEnumerator ShowDamageNumber(Vector3 position, int damageAmount)
+    {
+        GameObject damageTextObj = new GameObject("DamageText");
+        damageTextObj.transform.SetParent(this.transform);
+
+        TextMeshProUGUI damageText = damageTextObj.AddComponent<TextMeshProUGUI>();
+        damageText.fontSize = 36;
+        damageText.color = Color.red;
+        damageText.alignment = TextAlignmentOptions.Center;
+        damageText.text = "-" + damageAmount.ToString();
+
+        Vector3 screenPosition = Camera.main.WorldToScreenPoint(position);
+        damageTextObj.transform.position = screenPosition;
+
+        float duration = 1.0f;
+        float elapsed = 0f;
+        Vector3 startPos = damageTextObj.transform.position;
+        Vector3 endPos = startPos + new Vector3(0, 50, 0);
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+            damageTextObj.transform.position = Vector3.Lerp(startPos, endPos, t);
+            damageText.alpha = 1.0f - t;
+            yield return null;
+        }
+
+        Destroy(damageTextObj);
     }
 }

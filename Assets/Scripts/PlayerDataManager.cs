@@ -26,7 +26,8 @@ public class PlayerSave
     public float baseAutoCleanSpeed;
     public int baseHarvestRadius;
     public int baseDreamEssenceDropIncrease;
-    public int skillTreeSlots;
+    public int maxSkillTreeSlots;
+    public int currentUsedSkillSlots;
 
     [Header("Inventory / Unlocks")]
     // public List<string> ownedUpgradeIDs;
@@ -51,7 +52,8 @@ public class PlayerSave
         dreamEssence = 0;
         soulEssence = 0;
         humanSoul = 0;
-        skillTreeSlots = 2;
+        maxSkillTreeSlots = 2;
+        currentUsedSkillSlots = 0;
 
         baseDamagePerClick = 1;
         baseCritChance = 0f;
@@ -76,7 +78,8 @@ public class PlayerSave
         baseAutoCleanDamage = PlayerDataManager.Instance.BaseAutoCleaningDamage;
         baseAutoCleanSpeed = PlayerDataManager.Instance.BaseAutoCleaningSpeed;
         baseHarvestRadius = PlayerDataManager.Instance.BaseHarvestRadius;
-        skillTreeSlots = SkillManager.Instance.maxSkillTreeSlots;
+        maxSkillTreeSlots = SkillManager.Instance.maxSkillTreeSlots;
+        currentUsedSkillSlots = SkillManager.Instance.unlockedSkillIDs.Count;
 
         // Get current island and state from IslandManager
         islandState = IslandManager.Instance.currentState;
@@ -607,6 +610,12 @@ public class PlayerDataManager : MonoBehaviour
 
     public void Start()
     {
+        Initialize();
+    }
+
+    public void Initialize()
+    {
+        playerHUD = FindObjectOfType<PlayerHUD>();
         LoadFromJson();
     }
 
@@ -641,7 +650,7 @@ public class PlayerDataManager : MonoBehaviour
         BaseHarvestRadius = currentPlayerSave.baseHarvestRadius;
         BaseDreamEssenceDropIncrease = currentPlayerSave.baseDreamEssenceDropIncrease;
         
-        SkillManager.Instance.maxSkillTreeSlots = currentPlayerSave.skillTreeSlots;
+        SkillManager.Instance.maxSkillTreeSlots = currentPlayerSave.maxSkillTreeSlots;
 
         activeSkillMultipliers = new Dictionary<string, float>();
 

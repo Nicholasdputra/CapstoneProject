@@ -189,7 +189,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 7, y: 7, z: 7}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &792771510523476636
 MonoBehaviour:
@@ -209,7 +209,6 @@ MonoBehaviour:
   occupiedGridPositions: []
   currentHealth: 0
   maxHealth: 0
-  dialogue: 
   minibossData: {fileID: 0}
   miniBossName: 
   healthBarObject: {fileID: 0}
@@ -220,3 +219,5 @@ MonoBehaviour:
   timerBar: {fileID: 0}
   timer: 0
   timeLimit: 20
+  dialogueObject: {fileID: 0}
+  dialogue: 

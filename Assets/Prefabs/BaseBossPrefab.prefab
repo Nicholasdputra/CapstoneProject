@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: fe7415f828f1e9c43b879ae8e122947d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5e9f376fd45c81148abe8468fb0d1c7d, type: 3}
   m_Color: {r: 0.82641506, g: 0.81042707, b: 0.6346244, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 6669399944531499577}
   - component: {fileID: 3135639122007427201}
   - component: {fileID: 2633487806323138319}
-  - component: {fileID: 792771510523476636}
+  - component: {fileID: -7905716837693822232}
   m_Layer: 6
   m_Name: BaseBossPrefab
   m_TagString: Untagged
@@ -114,7 +114,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 2.5, z: 0}
-  m_LocalScale: {x: 7, y: 7, z: 7}
+  m_LocalScale: {x: 12, y: 12, z: 12}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2448007771908125271}
@@ -189,9 +189,9 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 12, y: 12, z: 12}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &792771510523476636
+--- !u!114 &-7905716837693822232
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -200,18 +200,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 8908509033781712180}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50b868ba0bcc3474da67eb4aa657dce7, type: 3}
+  m_Script: {fileID: 11500000, guid: 82325852383708d428e008c5d4e8f992, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xSize: 7
-  zSize: 7
+  xSize: 12
+  zSize: 12
   yOffset: 0
   occupiedGridPositions: []
   currentHealth: 0
   maxHealth: 0
-  dialogue: 
-  minibossData: {fileID: 0}
-  miniBossName: 
+  bossData: {fileID: 0}
+  bossName: 
   healthBarObject: {fileID: 0}
   bossNameText: {fileID: 0}
   healthBar: {fileID: 0}
@@ -219,4 +218,6 @@ MonoBehaviour:
   timerBarObject: {fileID: 0}
   timerBar: {fileID: 0}
   timer: 0
-  timeLimit: 20
+  timeLimit: 30
+  dialogueObject: {fileID: 0}
+  dialogue: 

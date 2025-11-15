@@ -6,6 +6,7 @@ public class Skill_FatefulNight : BaseSkill
 {
     void Start()
     {
+        InitializeButton();
         InitializeSkill();
     }
 

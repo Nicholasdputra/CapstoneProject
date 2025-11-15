@@ -6,7 +6,9 @@ public class Upgrade_CriticalChance : BaseUpgrade
 
     public void Start()
     {
+        upgradeID = "Upgrade_CriticalChance";
         DecideEffect();
+        maxUpgradeTier = 10;
     }
 
     public override void DecideEffect()
@@ -76,5 +78,7 @@ public class Upgrade_CriticalChance : BaseUpgrade
                 break;
         }
         pdm.BaseCritChance = criticalChance;
+
+        upgradeDescription = $"Set critical chance for every click to {criticalChance*100}%";
     }
 }

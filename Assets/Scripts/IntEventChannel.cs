@@ -8,7 +8,7 @@ public class IntEventChannel : ScriptableObject
 
     public void RaiseEvent(int value)
     {
-        Debug.Log("Int Event Raised: " + name + " with value: " + value);
+        // Debug.Log("Int Event Raised: " + name + " with value: " + value);
         OnEventRaised?.Invoke(value);
         // if (OnEventRaised != null)
         // {

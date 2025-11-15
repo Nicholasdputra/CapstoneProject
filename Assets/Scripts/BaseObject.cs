@@ -2,10 +2,12 @@ using UnityEngine;
 
 public abstract class BaseObject : ClickableEntity
 {
+    GridManager gridManager;
     public ObjectType objectType;
 
     public override void Initialize()
     {
+        gridManager = GameObject.FindObjectOfType<GridManager>();
         isClickable = true;
         CurrentHealth = MaxHealth;
         SetUpOffset();
@@ -52,6 +54,7 @@ public abstract class BaseObject : ClickableEntity
         }
 
         CurrentHealth -= CalculateClickDamage();
+        PlayerDataManager.Instance.playerHUD.CallShowDamageNumber(transform.position + Vector3.up * YOffset, CalculateClickDamage());
     }
 
     public int CalculateClickDamage()
@@ -87,8 +90,9 @@ public abstract class BaseObject : ClickableEntity
 
     public override void HandleDestroy()
     {
-        if (GridManager.Instance != null)
-            GridManager.Instance.SetCellOccupied(OccupiedGridPositions, false);
+        gridManager = GameObject.FindObjectOfType<GridManager>();   
+        if (gridManager != null)
+            gridManager.SetCellOccupied(OccupiedGridPositions, false);
         else
             Debug.LogWarning("GridManager Instance is null when destroying BaseObject.");
         int totalDreamEssenceDrop = PlayerDataManager.Instance.currentDreamEssenceDropIncrease + DreamEssenceDrop;
@@ -100,6 +104,7 @@ public abstract class BaseObject : ClickableEntity
         // Debug.Log("Added Human Soul: " + HumanSoulDrop);
         WaveManager.Instance.currentAliveEnemies.Remove(this);
         WaveManager.Instance.CheckIfWaveCompleted();
+        AudioManager.Instance.PlaySFXOnce(2);
         Destroy(gameObject);
         // Can add effects here too
     }

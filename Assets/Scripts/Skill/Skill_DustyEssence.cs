@@ -6,6 +6,7 @@ public class Skill_DustyEssence : BaseSkill
 {
     void Start()
     {
+        InitializeButton();
         InitializeSkill();
     }
 

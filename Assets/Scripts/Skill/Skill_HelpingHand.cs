@@ -6,6 +6,7 @@ public class Skill_HelpingHand : BaseSkill
 {
     void Start()
     {
+        InitializeButton();
         InitializeSkill();
     }
 

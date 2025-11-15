@@ -8,7 +8,9 @@ public class Upgrade_CriticalSweep : BaseUpgrade
 
     public void Start()
     {
+        upgradeID = "Upgrade_CriticalSweep";
         DecideEffect();
+        maxUpgradeTier = 10;
     }
 
     public override void DecideEffect()
@@ -78,5 +80,6 @@ public class Upgrade_CriticalSweep : BaseUpgrade
                 break;
         }
         pdm.BaseCritDamage = criticalSweepChanceIncrease;
+        upgradeDescription = $"Set click critical damage to {(1+criticalSweepChanceIncrease)*100}%";
     }
 }

@@ -1,9 +1,10 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class GridManager : MonoBehaviour
 {
-    public static GridManager Instance;
+    // public static GridManager Instance;
 
     public float gridCellSize = 1f;
     public int floorXSize;
@@ -19,25 +20,13 @@ public class GridManager : MonoBehaviour
 
     public VoidEventChannel OnGridInitialized;
 
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-
     private void Start()
     {
         CalculateFloorSize();
         InitializeGridPositions();
     }
 
-    private void CalculateFloorSize()
+    public void CalculateFloorSize()
     {
         floorPlatform = GameObject.FindWithTag("FloorPlatform");
         if (floorPlatform == null)
@@ -54,7 +43,7 @@ public class GridManager : MonoBehaviour
         floorZSize = Mathf.RoundToInt(b.size.z / gridCellSize);
     }
 
-    private void InitializeGridPositions()
+    public void InitializeGridPositions()
     {
         allGridPositions.Clear();
         for (int x = 0; x < floorXSize; x++)
@@ -65,7 +54,7 @@ public class GridManager : MonoBehaviour
             }
         }
         unoccupiedGridPositions = new HashSet<Vector2Int>(allGridPositions);
-
+        
         OnGridInitialized.RaiseEvent();
     }
 
@@ -95,19 +84,21 @@ public class GridManager : MonoBehaviour
 
     private float DetermineFloorYPosition(float x, float z)
     {
+        if (floorPlatform == null)
+        {
+            // Find the floor platform if not already assigned
+            floorPlatform = GameObject.FindWithTag("FloorPlatform");
+        }
+
         Ray ray = new Ray(new Vector3(x, floorPlatform.transform.position.y + 50f, z), Vector3.down);
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit, 50f, ~excludedLayers))
         {
-            // Debug.Log("Raycast hit at Y position: " + hit.point.y);
-            // Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green, 2f);
             return hit.point.y;
         }
         else
         {
-            // Debug.LogWarning("Raycast did not hit the ground layer. Using default floor Y position.");
-            // Debug.DrawRay(ray.origin, ray.direction * 50f, Color.red, 2f);
             return floorPlatform.transform.localScale.y;
         }
     }
@@ -126,7 +117,6 @@ public class GridManager : MonoBehaviour
 
         if (validPositions.Count == 0)
         {
-            Debug.LogWarning("No valid positions available for the object size.");
             return new Vector3(float.NaN, float.NaN, float.NaN);
         }
 
@@ -160,9 +150,13 @@ public class GridManager : MonoBehaviour
 
     public void SetCellOccupied(Vector2Int[] gridPositions, bool occupied)
     {
+
         if (gridPositions == null || gridPositions.Length == 0)
         {
             Debug.LogWarning("SetCellOccupied called with no positions left available.");
+            // Debug all occupied cells
+            Debug.Log("Currently occupied cells: " + string.Join(", ", occupiedGridPositions));
+
             return;
         }
 
@@ -221,6 +215,11 @@ public class GridManager : MonoBehaviour
 
     public void SetUpOccupiedClickableEntityGridPositions(ClickableEntity clickableEntity)
     {
+        if (clickableEntity.XSize <= 0 || clickableEntity.ZSize <= 0)
+        {
+            Debug.LogError("Boss ClickableEntity size is invalid. XSize or ZSize <= 0");
+            return;
+        }
         // Convert the object's center to grid coordinates
         Vector2Int centerGrid = ConvertPosFromWorldToGrid(clickableEntity.transform.position);
 
@@ -247,6 +246,13 @@ public class GridManager : MonoBehaviour
         // Debug.Log($"[{name}] Size: {sizeX}x{sizeZ}, Center Grid: {centerGrid}, Occupies: {string.Join(", ", OccupiedGridPositions)}");
 
         SetCellOccupied(clickableEntity.OccupiedGridPositions, true);
+    }
+
+    public void ClearAllOccupiedPositions()
+    {
+        occupiedGridPositions.Clear();
+        unoccupiedGridPositions = new HashSet<Vector2Int>(allGridPositions);
+        // Debug.Log("Cleared all occupied grid positions.");
     }
     
     #if UNITY_EDITOR

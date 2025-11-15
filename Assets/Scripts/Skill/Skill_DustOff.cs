@@ -6,6 +6,7 @@ public class Skill_DustOff : BaseSkill
 {
     void Start()
     {
+        InitializeButton();
         InitializeSkill();
     }
 

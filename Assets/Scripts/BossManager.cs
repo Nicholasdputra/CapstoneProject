@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class BossManager : MonoBehaviour
 {
+    GridManager gridManager;
     public static BossManager Instance;
     public BossDataSO bossDataArray;
 
@@ -31,6 +32,7 @@ public class BossManager : MonoBehaviour
 
     void Start()
     {
+        gridManager = GameObject.FindObjectOfType<GridManager>();
         CalculateYOffsetForBoss();
     }
 
@@ -48,7 +50,7 @@ public class BossManager : MonoBehaviour
     {
         // Logic to spawn boss goes here
         Debug.Log("Island is ready for boss. Spawning boss...");
-        currentBossDetails = bossDataArray.bosses[WaveManager.Instance.currentWaveData.waveNumber - 1];
+        currentBossDetails = bossDataArray.bosses[IslandManager.Instance.CurrentIslandIndex];
         SpawnBoss(currentBossDetails);
     }
 
@@ -56,43 +58,25 @@ public class BossManager : MonoBehaviour
     {
         ClickableEntity clickableEntity = bossPrefab.GetComponent<ClickableEntity>();
 
-        // if (clickableEntity == null)
-        // {
-        //     Debug.LogError("Boss prefab does not have a ClickableEntity component.");
-        //     return;
-        // }
-
-        // if (GridManager.Instance == null)
-        // {
-        //     Debug.LogError("GridManager Instance is null. Cannot spawn miniboss.");
-        //     return;
-        // }
-
-        // Get the base world position (center of tile)
-        Vector3 spawnPos = GridManager.Instance.GetRandomFreeTilePosition(
+        Vector3 spawnPos = gridManager.GetRandomFreeTilePosition(
             clickableEntity.XSize,
             clickableEntity.ZSize
         );
 
-        // Apply an offset so pivot = bottom-left corner
-        float cellSize = GridManager.Instance.gridCellSize;
+        float cellSize = gridManager.gridCellSize;
         spawnPos.x += (clickableEntity.XSize * cellSize) / 2f - (cellSize / 2f);
         spawnPos.z += (clickableEntity.ZSize * cellSize) / 2f - (cellSize / 2f);
-        spawnPos.y += YOffset / 2f;
+        spawnPos.y += YOffset;
 
-        // Instantiate
         currentBossInstance = Instantiate(bossPrefab, spawnPos, Quaternion.identity);
         currentBossInstance.name = $"Boss_{bossData.bossName}_Wave{WaveManager.Instance.currentWaveData.waveNumber}";
-
-        // Register in lists
-        ClickableEntity spawnedEntityClickableEntityComponent = currentBossInstance.GetComponent<ClickableEntity>();
-
-        // Mark occupied cells
-        GridManager.Instance.SetUpOccupiedClickableEntityGridPositions(spawnedEntityClickableEntityComponent);
-
-        // Pass along miniboss data to the spawned miniboss
+        
         BaseBoss spawnedBossComponent = currentBossInstance.GetComponent<BaseBoss>();
         spawnedBossComponent.bossData = bossData;
+
+        currentBossInstance.transform.Find("Square").GetComponent<SpriteRenderer>().sprite = bossData.bossSprite;
+
+        gridManager.SetUpOccupiedClickableEntityGridPositions(spawnedBossComponent);
     }
 
     private void CalculateYOffsetForBoss()

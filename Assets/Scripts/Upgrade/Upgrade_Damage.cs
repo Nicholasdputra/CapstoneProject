@@ -8,7 +8,9 @@ public class Upgrade_Damage : BaseUpgrade
 
     public void Start()
     {
+        upgradeID = "Upgrade_Damage";
         DecideEffect();
+        maxUpgradeTier = 15;
     }
 
     public override void DecideEffect()
@@ -103,5 +105,6 @@ public class Upgrade_Damage : BaseUpgrade
                 break;
         }
         pdm.BaseDamagePerClick = 1 + damageIncrease;
+        upgradeDescription = $"Set base damage per click to {pdm.BaseDamagePerClick}";
     }
 }

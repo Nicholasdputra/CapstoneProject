@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using TMPro;
 
 public class SkillManager : MonoBehaviour
 {
@@ -14,7 +15,13 @@ public class SkillManager : MonoBehaviour
     public List<BaseSkill> skillObjectsInScene = new List<BaseSkill>();
     private Dictionary<string, BaseSkill> skillDict = new Dictionary<string, BaseSkill>();
 
+    [Header("Shop Buttons")]
+    public List<SkillShopButton> allShopButtons = new List<SkillShopButton>();
+
     public int maxSkillTreeSlots;
+    public int currentUsedSkillSlots = 0;
+
+    public TextMeshProUGUI skillSlotsText;
 
     private void Awake()
     {
@@ -29,9 +36,32 @@ public class SkillManager : MonoBehaviour
             return;
         }
 
-        BuildSkillDictionary();
         FindSkillObjectsInScene();  
+        BuildSkillDictionary();
     }
+
+    public void UpdateSkillSlotsUI()
+    {
+        if (skillSlotsText != null)
+        {
+            skillSlotsText.text = $"{currentUsedSkillSlots} / {maxSkillTreeSlots}";
+        }
+    }
+
+    public void RefreshAllShopButtons()
+    {
+        foreach (var btn in allShopButtons)
+            if (btn != null)
+                btn.RefreshButtonState();
+    }
+
+
+    public void RegisterShopButton(SkillShopButton btn)
+    {
+        if (!allShopButtons.Contains(btn))
+            allShopButtons.Add(btn);
+    }
+
 
     private void Start()
     {
@@ -43,8 +73,24 @@ public class SkillManager : MonoBehaviour
     private void FindSkillObjectsInScene()
     {
         skillObjectsInScene.Clear();
-        BaseSkill[] skillsInScene = FindObjectsOfType<BaseSkill>();
+        GameObject HUDCanvas = GameObject.Find("HUDCanvas");
+        if (HUDCanvas == null)
+        {
+            Debug.LogError("SkillManager: Could not find HUDCanvas.");
+            return;
+        }
+        Transform skillButtons = HUDCanvas.transform.Find("SkillButtons");
+        if (skillButtons == null)
+        {
+            Debug.LogError("SkillManager: Could not find SkillButtons under HUDCanvas.");
+            return;
+        }
+
+
+        // includeInactive = true ensures components on disabled GameObjects are found
+        BaseSkill[] skillsInScene = skillButtons.GetComponentsInChildren<BaseSkill>(true);
         skillObjectsInScene.AddRange(skillsInScene);
+        Debug.Log($"SkillManager: Found {skillsInScene.Length} BaseSkill components in scene.");
     }
 
 
@@ -52,8 +98,24 @@ public class SkillManager : MonoBehaviour
     {
         skillDict.Clear();
 
+        if (skillObjectsInScene.Count == 0)
+        {
+            Debug.LogWarning("No skills found in scene!");
+        } 
+        else
+        {
+            Debug.Log($"Found {skillObjectsInScene.Count} skills in scene.");
+
+            // 1. Log each skill's ID
+            foreach (BaseSkill skill in skillObjectsInScene)
+            {
+                Debug.Log($"Skill found: {skill.skillID}");
+            }
+        }
+
         foreach (BaseSkill skill in skillObjectsInScene)
         {
+            Debug.Log($"Registering skill ID: {skill.skillID}");
             if (!skillDict.ContainsKey(skill.skillID))
             {
                 skillDict.Add(skill.skillID, skill);
@@ -64,7 +126,6 @@ public class SkillManager : MonoBehaviour
             }
         }
     }
-
 
     public void RefreshLockedSkills()
     {
@@ -90,11 +151,48 @@ public class SkillManager : MonoBehaviour
 
     public void UnlockSkill(string skillID)
     {
-        if (!unlockedSkillIDs.Contains(skillID))
+        if (unlockedSkillIDs.Contains(skillID))
+            return;
+
+        if (currentUsedSkillSlots >= maxSkillTreeSlots)
         {
-            unlockedSkillIDs.Add(skillID);
-            RefreshLockedSkills();
-            ApplySkillActivationState();
+            Debug.Log("SkillManager: Cannot unlock. No skill slots available.");
+            return;
         }
+
+        unlockedSkillIDs.Add(skillID);
+        currentUsedSkillSlots = unlockedSkillIDs.Count;
+
+        RefreshLockedSkills();
+        ApplySkillActivationState();
+        UpdateSkillSlotsUI();
+
+        RefreshAllShopButtons();
     }
+
+
+    public void LockSkill(string skillID)
+    {
+        if (!unlockedSkillIDs.Contains(skillID))
+            return;
+
+        unlockedSkillIDs.Remove(skillID);
+        currentUsedSkillSlots = unlockedSkillIDs.Count;
+
+        RefreshLockedSkills();
+        ApplySkillActivationState();
+        UpdateSkillSlotsUI();
+
+        RefreshAllShopButtons();
+    }
+
+    public BaseSkill GetSkillByID(string id)
+    {
+        if (skillDict.TryGetValue(id, out BaseSkill skill))
+            return skill;
+
+        Debug.LogWarning($"SkillManager: No skill found with ID: {id}");
+        return null;
+    }
+
 }

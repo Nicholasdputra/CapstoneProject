@@ -29,6 +29,7 @@ public class BaseBoss : ClickableEntity
     public Coroutine dialogueCoroutine;
     protected TextMeshProUGUI dialogueText;
     
+    GridManager gridManager;
     void Start()
     {
         Initialize();
@@ -36,6 +37,7 @@ public class BaseBoss : ClickableEntity
 
     public override void Initialize()
     {
+        gridManager = GameObject.FindObjectOfType<GridManager>();
         Debug.Log("Initializing Boss Type Entity with data: " + bossData);
         // Base Stats
         MaxHealth = bossData.health;
@@ -156,8 +158,8 @@ public class BaseBoss : ClickableEntity
             yield return new WaitForSeconds(1f);
             timer++;
         }
-
-        GridManager.Instance.SetCellOccupied(OccupiedGridPositions, false);
+        gridManager = GameObject.FindObjectOfType<GridManager>();
+        gridManager.SetCellOccupied(OccupiedGridPositions, false);
         healthBarObject.SetActive(false);
         timerBarObject.SetActive(false);
 
@@ -227,8 +229,8 @@ public class BaseBoss : ClickableEntity
             {
                 StopCoroutine(timerCoroutine);
             }
-
-            GridManager.Instance.SetCellOccupied(OccupiedGridPositions, false);
+            gridManager = GameObject.FindObjectOfType<GridManager>();
+            gridManager.SetCellOccupied(OccupiedGridPositions, false);
             int totalDreamEssenceDrop = PlayerDataManager.Instance.currentDreamEssenceDropIncrease + DreamEssenceDrop;
             PlayerDataManager.Instance.AddDreamEssence(totalDreamEssenceDrop);
             PlayerDataManager.Instance.AddSoulEssence(SoulEssenceDrop);
@@ -253,11 +255,11 @@ public class BaseBoss : ClickableEntity
             {
                 StopCoroutine(timerCoroutine);
             }
-
-            GridManager.Instance.SetCellOccupied(OccupiedGridPositions, false);
+            gridManager = GameObject.FindObjectOfType<GridManager>();
+            gridManager.SetCellOccupied(OccupiedGridPositions, false);
             healthBarObject.SetActive(false);
             timerBarObject.SetActive(false);
-
+            AudioManager.Instance.PlaySFXOnce(2);
             Destroy(gameObject);
         }
     }
