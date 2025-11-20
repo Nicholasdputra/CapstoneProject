@@ -86,7 +86,7 @@ public class PlayerHUD : MonoBehaviour
 
         TextMeshProUGUI damageText = damageTextObj.AddComponent<TextMeshProUGUI>();
         damageText.fontSize = 36;
-        damageText.color = Color.red;
+        damageText.color = Color.black;
         damageText.alignment = TextAlignmentOptions.Center;
         damageText.text = "-" + damageAmount.ToString();
 
@@ -109,4 +109,30 @@ public class PlayerHUD : MonoBehaviour
 
         Destroy(damageTextObj);
     }
+
+    public IEnumerator ShowInsufficientSoulEssenceToSpend(int requiredAmount, int currentAmount)
+    {
+        GameObject warningTextObj = new GameObject("InsufficientSoulEssenceText");
+        warningTextObj.transform.SetParent(this.transform);
+
+        TextMeshProUGUI warningText = warningTextObj.AddComponent<TextMeshProUGUI>();
+        warningText.fontSize = 28;
+        warningText.color = Color.red;
+        warningText.alignment = TextAlignmentOptions.Center;
+        warningText.text = $"Insufficient Soul Essence! Need {requiredAmount}, have {currentAmount}.";
+
+        warningTextObj.transform.position = new Vector3(Screen.width / 2, Screen.height / 2, 0);
+
+        float duration = 2.0f;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        Destroy(warningTextObj);
+    }
+
 }

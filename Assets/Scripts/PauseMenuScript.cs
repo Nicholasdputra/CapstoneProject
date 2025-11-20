@@ -23,7 +23,17 @@ public class PauseMenuScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (pauseMenuPanel != null && pauseMenuPanel.activeSelf)
+            {
+                ClosePauseMenu();
+            }
+            else
+            {
+                OpenPauseMenu();
+            }
+        }
     }
 
     public void OpenPauseMenu()
@@ -47,7 +57,7 @@ public class PauseMenuScript : MonoBehaviour
     public void BackToMainMenu()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("MainMenuScene");
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void QuitGame()

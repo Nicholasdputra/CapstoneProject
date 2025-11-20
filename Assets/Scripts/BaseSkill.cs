@@ -76,6 +76,7 @@ public abstract class BaseSkill : MonoBehaviour
             yield return new WaitForSeconds(currentDuration);
             currentDuration = baseDuration;
         }
+        PlayerDataManager.Instance.playerHUD.ShowInsufficientSoulEssenceToSpend(soulEssenceCost, PlayerDataManager.Instance.SoulEssence);
         StopSkill();
     }
 

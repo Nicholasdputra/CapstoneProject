@@ -10,7 +10,7 @@ public class Upgrade_SleepTight : BaseUpgrade
     {
         upgradeID = "Upgrade_SleepTight";
         DecideEffect();
-        maxUpgradeTier = 10;
+        maxUpgradeTier = 9;
     }
 
     public override void DecideEffect()
@@ -20,58 +20,53 @@ public class Upgrade_SleepTight : BaseUpgrade
         {
             case 0:
                 upgradeName = "Sleep Tight I";
-                dreamEssenceDropIncrease = 0;
+                dreamEssenceDropIncrease = 2;
                 dreamEssenceCostToNextTier = 25;
                 break;
             case 1:
                 upgradeName = "Sleep Tight I";
-                dreamEssenceDropIncrease = 2;
+                dreamEssenceDropIncrease = 4;
                 dreamEssenceCostToNextTier = 28;
                 break;
             case 2:
                 upgradeName = "Sleep Tight I";
-                dreamEssenceDropIncrease = 4;
+                dreamEssenceDropIncrease = 6;
                 dreamEssenceCostToNextTier = 33;
                 break;
             case 3:
                 upgradeName = "Sleep Tight I";
-                dreamEssenceDropIncrease = 6;
+                dreamEssenceDropIncrease = 8;
                 dreamEssenceCostToNextTier = 44;
                 break;
             case 4:
                 upgradeName = "Sleep Tight I";
-                dreamEssenceDropIncrease = 8;
+                dreamEssenceDropIncrease = 10;
                 dreamEssenceCostToNextTier = 65;
                 break;
             case 5:
-                upgradeName = "Sleep Tight I";
-                dreamEssenceDropIncrease = 10;
+                upgradeName = "Sleep Tight II";
+                dreamEssenceDropIncrease = 13;
                 dreamEssenceCostToNextTier = 70;
                 break;
             case 6:
                 upgradeName = "Sleep Tight II";
-                dreamEssenceDropIncrease = 13;
+                dreamEssenceDropIncrease = 16;
                 dreamEssenceCostToNextTier = 77;
                 break;
             case 7:
                 upgradeName = "Sleep Tight II";
-                dreamEssenceDropIncrease = 16;
+                dreamEssenceDropIncrease = 19;
                 dreamEssenceCostToNextTier = 93;
                 break;
             case 8:
                 upgradeName = "Sleep Tight II";
-                dreamEssenceDropIncrease = 19;
+                dreamEssenceDropIncrease = 22;
                 dreamEssenceCostToNextTier = 124;
                 break;
             case 9:
                 upgradeName = "Sleep Tight II";
-                dreamEssenceDropIncrease = 22;
-                dreamEssenceCostToNextTier = 165;
-                break;
-            case 10:
-                upgradeName = "Sleep Tight II";
                 dreamEssenceDropIncrease = 25;
-                dreamEssenceCostToNextTier = -1;
+                dreamEssenceCostToNextTier = 165;
                 break;
             default:
                 upgradeName = "Sleep Tight II";

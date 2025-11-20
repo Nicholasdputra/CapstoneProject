@@ -10,7 +10,7 @@ public class Upgrade_SkillTreeSlot : BaseUpgrade
     {
         upgradeID = "Upgrade_SkillTreeSlot";
         DecideEffect();
-        maxUpgradeTier = 5;
+        maxUpgradeTier = 4;
     }
 
     public override void DecideEffect()
@@ -20,33 +20,28 @@ public class Upgrade_SkillTreeSlot : BaseUpgrade
         {
             case 0:
                 upgradeName = "Skill Tree Slot";
-                addedSkillTreeSlots = 0;
+                addedSkillTreeSlots = 1;
                 dreamEssenceCostToNextTier = 100;
                 break;
             case 1:
                 upgradeName = "Skill Tree Slot";
-                addedSkillTreeSlots = 1;
+                addedSkillTreeSlots = 2;
                 dreamEssenceCostToNextTier = 110;
                 break;
             case 2:
                 upgradeName = "Skill Tree Slot";
-                addedSkillTreeSlots = 2;
+                addedSkillTreeSlots = 3;
                 dreamEssenceCostToNextTier = 133;
                 break;
             case 3:
                 upgradeName = "Skill Tree Slot";
-                addedSkillTreeSlots = 3;
+                addedSkillTreeSlots = 4;
                 dreamEssenceCostToNextTier = 177;
                 break;
             case 4:
                 upgradeName = "Skill Tree Slot";
-                addedSkillTreeSlots = 4;
-                dreamEssenceCostToNextTier = 259;
-                break;
-            case 5:
-                upgradeName = "Skill Tree Slot";
                 addedSkillTreeSlots = 5;
-                dreamEssenceCostToNextTier = -1;
+                dreamEssenceCostToNextTier = 259;
                 break;
             default:
                 upgradeName = "Skill Tree Slot";

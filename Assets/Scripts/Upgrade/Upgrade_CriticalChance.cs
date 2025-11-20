@@ -8,7 +8,7 @@ public class Upgrade_CriticalChance : BaseUpgrade
     {
         upgradeID = "Upgrade_CriticalChance";
         DecideEffect();
-        maxUpgradeTier = 10;
+        maxUpgradeTier = 9;
     }
 
     public override void DecideEffect()
@@ -18,58 +18,53 @@ public class Upgrade_CriticalChance : BaseUpgrade
         {
             case 0:
                 upgradeName = "Critical Chance I";
-                criticalChance = 0f;
+                criticalChance = 0.04f;
                 dreamEssenceCostToNextTier = 20;
                 break;
             case 1:
                 upgradeName = "Critical Chance I";
-                criticalChance = 0.04f;
+                criticalChance = 0.08f;
                 dreamEssenceCostToNextTier = 24;
                 break;
             case 2:
                 upgradeName = "Critical Chance I";
-                criticalChance = 0.08f;
+                criticalChance = 0.12f;
                 dreamEssenceCostToNextTier = 35;
                 break;
             case 3:
                 upgradeName = "Critical Chance I";
-                criticalChance = 0.12f;
+                criticalChance = 0.16f;
                 dreamEssenceCostToNextTier = 60;
                 break;
             case 4:
                 upgradeName = "Critical Chance I";
-                criticalChance = 0.16f;
+                criticalChance = 0.2f;
                 dreamEssenceCostToNextTier = 124;
                 break;
             case 5:
-                upgradeName = "Critical Chance I";
-                criticalChance = 0.2f;
+                upgradeName = "Critical Chance II";
+                criticalChance = 0.26f;
                 dreamEssenceCostToNextTier = 130;
                 break;
             case 6:
                 upgradeName = "Critical Chance II";
-                criticalChance = 0.26f;
+                criticalChance = 0.32f;
                 dreamEssenceCostToNextTier = 156;
                 break;
             case 7:
                 upgradeName = "Critical Chance II";
-                criticalChance = 0.32f;
+                criticalChance = 0.38f;
                 dreamEssenceCostToNextTier = 225;
                 break;
             case 8:
                 upgradeName = "Critical Chance II";
-                criticalChance = 0.38f;
+                criticalChance = 0.44f;
                 dreamEssenceCostToNextTier = 388;
                 break;
             case 9:
                 upgradeName = "Critical Chance II";
-                criticalChance = 0.44f;
-                dreamEssenceCostToNextTier = 805;
-                break;
-            case 10:
-                upgradeName = "Critical Chance II";
                 criticalChance = 0.5f;
-                dreamEssenceCostToNextTier = -1;
+                dreamEssenceCostToNextTier = 805;
                 break;
             default:
                 upgradeName = "Critical Chance II";

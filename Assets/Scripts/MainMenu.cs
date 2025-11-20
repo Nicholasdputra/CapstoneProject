@@ -6,6 +6,7 @@ public class MainMenu : MonoBehaviour
 {
     void Start()
     {
+        // Debug.Log("MainMenu: Playing background music.");
         AudioManager.Instance.PlayBGMLoop(0);
     }
 

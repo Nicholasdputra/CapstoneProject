@@ -48,7 +48,7 @@ public abstract class BaseObject : ClickableEntity
 
     public override void OnClick()
     {
-        if (!isClickable)
+        if (!isClickable) // or isnt in a state to be clicked
         {
             return;
         }

@@ -8,7 +8,7 @@ public class ModifiedAudioClips
     [Header("Clip Settings")]
     public AudioClip clip;
     public float startTime = 0f;
-    public float endTime = -1f; // -1 means play till the end
+    public float endTime = -1f;
     public float clipVolumeMultiplier = 1f;
 
     [HideInInspector] public AudioSource audioSource;
@@ -17,6 +17,13 @@ public class ModifiedAudioClips
     public void Initialize(AudioSource source)
     {
         audioSource = source;
+        if(clipVolumeMultiplier <= 0f)
+        {
+            clipVolumeMultiplier = 0.01f;
+        } else if (clipVolumeMultiplier > 1f)
+        {
+            clipVolumeMultiplier = 1f;
+        }
     }
 
     // Play the clip once
@@ -64,6 +71,7 @@ public class ModifiedAudioClips
 
     private IEnumerator PlayClipCoroutine(int repeatCount)
     {
+        Debug.Log("ModifiedAudioClips: Starting PlayClipCoroutine for clip: " + clip.name);
         // Check to see if the audiosource it wants to play from exists and check to see if the clip exists
         if (clip == null || audioSource == null)
         {
@@ -92,6 +100,7 @@ public class ModifiedAudioClips
         int playedTimes = 0;        
         while (repeatCount == -1 || playedTimes < repeatCount) // -1 means infinite loop
         {
+            Debug.Log("ModifiedAudioClips: Playing clip: " + clip.name + " (Play count: " + (playedTimes + 1) + ")");
             // Set the clip and volume
             audioSource.clip = clip;
 
@@ -230,6 +239,8 @@ public class AudioManager : MonoBehaviour
         {
             Debug.LogWarning("Audio source is null for clip: " + clip.clip.name);
         }
+        Debug.Log("Determined volume for clip " + clip.clip.name + ": " + finalVolume);
+        Debug.Log("Sfx Volume Pref: " + PlayerPrefs.GetFloat(SFX_VOLUME_KEY, 1.0f) + ", BGM Volume Pref: " + PlayerPrefs.GetFloat(BGM_VOLUME_KEY, 1.0f));
     }
 
     // Play a BGM clip once
@@ -238,6 +249,7 @@ public class AudioManager : MonoBehaviour
         if (index >= 0 && index < bgmClips.Length)
         {
             DetermineVolume(bgmClips[index]);
+            Debug.Log("Playing BGM clip: " + bgmClips[index].clip.name);
             bgmClips[index].PlayOnce();
         }
         else
@@ -253,6 +265,7 @@ public class AudioManager : MonoBehaviour
         if (index >= 0 && index < bgmClips.Length)
         {
             DetermineVolume(bgmClips[index]);
+            Debug.Log("Playing BGM clip: " + bgmClips[index].clip.name);
             bgmClips[index].PlayTimes(times);
         }
         else
@@ -268,6 +281,7 @@ public class AudioManager : MonoBehaviour
         if (index >= 0 && index < bgmClips.Length)
         {
             DetermineVolume(bgmClips[index]);
+            Debug.Log("Playing BGM clip: " + bgmClips[index].clip.name);
             bgmClips[index].PlayLoop();
         }
         else
@@ -283,6 +297,7 @@ public class AudioManager : MonoBehaviour
         if (index >= 0 && index < sfxClips.Length)
         {
             DetermineVolume(sfxClips[index]);
+            Debug.Log("Playing SFX clip: " + sfxClips[index].clip.name);
             sfxClips[index].PlayOnce();
         }
         else
@@ -298,6 +313,7 @@ public class AudioManager : MonoBehaviour
         if (index >= 0 && index < sfxClips.Length)
         {
             DetermineVolume(sfxClips[index]);
+            Debug.Log("Playing SFX clip: " + sfxClips[index].clip.name);
             sfxClips[index].PlayTimes(times);
         }
         else
@@ -313,6 +329,7 @@ public class AudioManager : MonoBehaviour
         if (index >= 0 && index < sfxClips.Length)
         {
             DetermineVolume(sfxClips[index]);
+            Debug.Log("Playing SFX clip: " + sfxClips[index].clip.name);
             sfxClips[index].PlayLoop();
         }
         else

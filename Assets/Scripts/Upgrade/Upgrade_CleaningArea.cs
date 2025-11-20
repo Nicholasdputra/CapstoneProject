@@ -10,7 +10,7 @@ public class Upgrade_CleaningArea : BaseUpgrade
     {
         upgradeID = "Upgrade_CleaningArea";
         DecideEffect();
-        maxUpgradeTier = 5;
+        maxUpgradeTier = 4;
     }
 
     public override void DecideEffect()
@@ -20,34 +20,28 @@ public class Upgrade_CleaningArea : BaseUpgrade
         {
             case 0:
                 upgradeName = "Cleaning Area I";
-                harvestAreaIncrease = 0;
+                harvestAreaIncrease = 1;
                 dreamEssenceCostToNextTier = 10;
                 break;
             case 1:
                 upgradeName = "Cleaning Area I";
-                harvestAreaIncrease = 1;
-                
+                harvestAreaIncrease = 2;
                 dreamEssenceCostToNextTier = 12;
                 break;
             case 2:
                 upgradeName = "Cleaning Area I";
-                harvestAreaIncrease = 2;
+                harvestAreaIncrease = 3;
                 dreamEssenceCostToNextTier = 17;
                 break;
             case 3:
                 upgradeName = "Cleaning Area I";
-                harvestAreaIncrease = 3;
+                harvestAreaIncrease = 4;
                 dreamEssenceCostToNextTier = 30;
                 break;
             case 4:
                 upgradeName = "Cleaning Area I";
-                harvestAreaIncrease = 4;
-                dreamEssenceCostToNextTier = 62;
-                break;
-            case 5:
-                upgradeName = "Cleaning Area I";
                 harvestAreaIncrease = 5;
-                dreamEssenceCostToNextTier = -1;
+                dreamEssenceCostToNextTier = 62;
                 break;
             default:
                 upgradeName = "Cleaning Area I";

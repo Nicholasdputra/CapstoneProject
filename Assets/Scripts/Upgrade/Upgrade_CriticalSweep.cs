@@ -10,7 +10,7 @@ public class Upgrade_CriticalSweep : BaseUpgrade
     {
         upgradeID = "Upgrade_CriticalSweep";
         DecideEffect();
-        maxUpgradeTier = 10;
+        maxUpgradeTier = 9;
     }
 
     public override void DecideEffect()
@@ -20,58 +20,53 @@ public class Upgrade_CriticalSweep : BaseUpgrade
         {
             case 0:
                 upgradeName = "Critical Sweep I";
-                criticalSweepChanceIncrease = 0f;
+                criticalSweepChanceIncrease = 0.05f;
                 dreamEssenceCostToNextTier = 25;
                 break;
             case 1:
                 upgradeName = "Critical Sweep I";
-                criticalSweepChanceIncrease = 0.05f;
+                criticalSweepChanceIncrease = 0.1f;
                 dreamEssenceCostToNextTier = 30;
                 break;
             case 2:
                 upgradeName = "Critical Sweep I";
-                criticalSweepChanceIncrease = 0.1f;
+                criticalSweepChanceIncrease = 0.15f;
                 dreamEssenceCostToNextTier = 43;
                 break;
             case 3:
                 upgradeName = "Critical Sweep I";
-                criticalSweepChanceIncrease = 0.15f;
+                criticalSweepChanceIncrease = 0.2f;
                 dreamEssenceCostToNextTier = 75;
                 break;
             case 4:
                 upgradeName = "Critical Sweep I";
-                criticalSweepChanceIncrease = 0.2f;
+                criticalSweepChanceIncrease = 0.25f;
                 dreamEssenceCostToNextTier = 155;
                 break;
             case 5:
                 upgradeName = "Critical Sweep I";
-                criticalSweepChanceIncrease = 0.25f;
+                criticalSweepChanceIncrease = 0.32f;
                 dreamEssenceCostToNextTier = 180;
                 break;
             case 6:
                 upgradeName = "Critical Sweep II";
-                criticalSweepChanceIncrease = 0.32f;
+                criticalSweepChanceIncrease = 0.39f;
                 dreamEssenceCostToNextTier = 216;
                 break;
             case 7:
                 upgradeName = "Critical Sweep II";
-                criticalSweepChanceIncrease = 0.39f;
+                criticalSweepChanceIncrease = 0.46f;
                 dreamEssenceCostToNextTier = 311;
                 break;
             case 8:
                 upgradeName = "Critical Sweep II";
-                criticalSweepChanceIncrease = 0.46f;
+                criticalSweepChanceIncrease = 0.53f;
                 dreamEssenceCostToNextTier = 537;
                 break;
             case 9:
                 upgradeName = "Critical Sweep II";
-                criticalSweepChanceIncrease = 0.53f;
-                dreamEssenceCostToNextTier = 1115;
-                break;
-            case 10:
-                upgradeName = "Critical Sweep II";
                 criticalSweepChanceIncrease = 0.6f;
-                dreamEssenceCostToNextTier = -1;
+                dreamEssenceCostToNextTier = 1115;
                 break;
             default:
                 upgradeName = "Critical Sweep II";

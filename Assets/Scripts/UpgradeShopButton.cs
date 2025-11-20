@@ -90,13 +90,16 @@ public class UpgradeShopButton : MonoBehaviour
         if (linkedUpgrade == null) return;
 
         // Title & description
-        if (upgradeTitleText != null) upgradeTitleText.text = linkedUpgrade.upgradeName;
+        if (upgradeTitleText != null)
+        {
+            upgradeTitleText.text = linkedUpgrade.upgradeName;    
+        } 
         if (upgradeDescriptionText != null) upgradeDescriptionText.text = linkedUpgrade.upgradeDescription;
 
         // Stage / tier display e.g. "Tier 2 / 5"
         if (upgradeStageText != null)
         {
-            upgradeStageText.text = $"Current Tier {linkedUpgrade.upgradeTier} / {linkedUpgrade.maxUpgradeTier}";
+            upgradeStageText.text = $"{linkedUpgrade.upgradeTier+1} / {linkedUpgrade.maxUpgradeTier+1}";
         }
 
         // If maxed

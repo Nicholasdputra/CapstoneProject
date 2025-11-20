@@ -8,7 +8,7 @@ public class Upgrade_CleaningSpeed : BaseUpgrade
     {
         upgradeID = "Upgrade_CleaningSpeed";
         DecideEffect();
-        maxUpgradeTier = 10;
+        maxUpgradeTier = 9;
     }
 
     public override void DecideEffect()
@@ -42,38 +42,33 @@ public class Upgrade_CleaningSpeed : BaseUpgrade
                 dreamEssenceCostToNextTier = 62;
                 break;
             case 5:
-                upgradeName = "Cleaning Speed I";
-                cleaningSpeedIncrease = 0.3f;
+                upgradeName = "Cleaning Speed II";
+                cleaningSpeedIncrease = 0.32f;
                 dreamEssenceCostToNextTier = 65;
                 break;
             case 6:
                 upgradeName = "Cleaning Speed II";
-                cleaningSpeedIncrease = 0.37f;
+                cleaningSpeedIncrease = 0.39f;
                 dreamEssenceCostToNextTier = 78;
                 break;
             case 7:
                 upgradeName = "Cleaning Speed II";
-                cleaningSpeedIncrease = 0.44f;
+                cleaningSpeedIncrease = 0.46f;
                 dreamEssenceCostToNextTier = 112;
                 break;
             case 8:
                 upgradeName = "Cleaning Speed II";
-                cleaningSpeedIncrease = 0.51f;
+                cleaningSpeedIncrease = 0.53f;
                 dreamEssenceCostToNextTier = 194;
                 break;
             case 9:
                 upgradeName = "Cleaning Speed I";
-                cleaningSpeedIncrease = 0.58f;
+                cleaningSpeedIncrease = 0.6f;
                 dreamEssenceCostToNextTier = 402;
-                break;
-            case 10:
-                upgradeName = "Cleaning Speed II";
-                cleaningSpeedIncrease = 0.65f;
-                dreamEssenceCostToNextTier = -1;
                 break;
             default:
                 upgradeName = "Cleaning Speed II";
-                cleaningSpeedIncrease = 0.65f;
+                cleaningSpeedIncrease = 0.6f;
                 dreamEssenceCostToNextTier = -1;
                 break;
         }
