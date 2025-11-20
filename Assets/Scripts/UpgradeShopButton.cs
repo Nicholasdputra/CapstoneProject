@@ -162,7 +162,7 @@ public class UpgradeShopButton : MonoBehaviour
         {
             // upgrade succeeded; refresh this button
             RefreshUI();
-
+            PlayerDataManager.Instance.RecalculateFinalStats();
             // optionally refresh whole shop so other buttons that depend on currency update
             // e.g. tell ShopManager to call RefreshAllUpgradeButtons()
             if (ShopManager.Instance != null) ShopManager.Instance.RefreshAllUpgradeButtons();

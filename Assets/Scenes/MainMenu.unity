@@ -1571,12 +1571,12 @@ MonoBehaviour:
     endTime: 0
     clipVolumeMultiplier: 1
     audioSource: {fileID: 0}
-  - clip: {fileID: 8300000, guid: 31d98dd329bb5a541a72852626cc564b, type: 3}
+  - clip: {fileID: 8300000, guid: 324f8856d7463b44cbc9ebfb4cbd23c2, type: 3}
     startTime: 0
     endTime: 0
     clipVolumeMultiplier: 1
     audioSource: {fileID: 0}
-  - clip: {fileID: 8300000, guid: 324f8856d7463b44cbc9ebfb4cbd23c2, type: 3}
+  - clip: {fileID: 8300000, guid: 31d98dd329bb5a541a72852626cc564b, type: 3}
     startTime: 0
     endTime: 0
     clipVolumeMultiplier: 1
@@ -1585,37 +1585,37 @@ MonoBehaviour:
   - clip: {fileID: 8300000, guid: fe8311c2adb267d4098f93894dcc853c, type: 3}
     startTime: 0
     endTime: 0
-    clipVolumeMultiplier: 0
+    clipVolumeMultiplier: 1
     audioSource: {fileID: 0}
   - clip: {fileID: 8300000, guid: 98261a4934396894db2df8869a1748cd, type: 3}
     startTime: 0
     endTime: 0
-    clipVolumeMultiplier: 0
+    clipVolumeMultiplier: 1
     audioSource: {fileID: 0}
   - clip: {fileID: 8300000, guid: 7c2d7b423ba81bb4681f5f9de0967dff, type: 3}
     startTime: 0
     endTime: 0
-    clipVolumeMultiplier: 0
+    clipVolumeMultiplier: 1
     audioSource: {fileID: 0}
   - clip: {fileID: 8300000, guid: 5449eecf8dec0674da8ee8ae179d0f07, type: 3}
     startTime: 0
     endTime: 0
-    clipVolumeMultiplier: 0
+    clipVolumeMultiplier: 1
     audioSource: {fileID: 0}
   - clip: {fileID: 8300000, guid: 39fc7ce0a3f11cf4a8c59f323d746351, type: 3}
     startTime: 0
     endTime: 0
-    clipVolumeMultiplier: 0
+    clipVolumeMultiplier: 1
     audioSource: {fileID: 0}
   - clip: {fileID: 8300000, guid: bd5060dc9faf2e04285e2a577c70a6a7, type: 3}
     startTime: 0
     endTime: 0
-    clipVolumeMultiplier: 0
+    clipVolumeMultiplier: 1
     audioSource: {fileID: 0}
   - clip: {fileID: 8300000, guid: 73c798401be0cc341941be196b4ba5ed, type: 3}
     startTime: 0
     endTime: 0
-    clipVolumeMultiplier: 0
+    clipVolumeMultiplier: 1
     audioSource: {fileID: 0}
 --- !u!1 &829961538
 GameObject:

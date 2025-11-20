@@ -500,13 +500,20 @@ public class PlayerDataManager : MonoBehaviour
         RecalculateFinalStats();
     }
 
-    void RecalculateFinalStats()
+    public void RecalculateFinalStats()
     {
         // Set all the variables that start with current to their base values
+        Debug.Log("Base Dream Essence Drop Increase: " + baseDreamEssenceDropIncrease);
         currentDreamEssenceDropIncrease = baseDreamEssenceDropIncrease;
-        currentHarvestRadius = baseHarvestRadius;
+        Debug.Log("Current Dream Essence Drop Increase reset to base: " + baseDreamEssenceDropIncrease);
         
+        Debug.Log("base Harvest Radius: " + baseHarvestRadius); 
+        currentHarvestRadius = baseHarvestRadius;
+        Debug.Log("Current Harvest Radius reset to base: " + baseHarvestRadius);
+        Debug.Log("Base Damage Per Click: " + BaseDamagePerClick);
+
         currentDamagePerClick = baseDamagePerClick;
+        
         currentCritChance = baseCritChance;
         currentCritDamage = baseCritDamage;
 
