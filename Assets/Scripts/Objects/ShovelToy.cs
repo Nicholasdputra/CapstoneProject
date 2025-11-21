@@ -12,7 +12,7 @@ public class ShovelToy : BaseObject
     {
         // Debug.Log("Initializing ShovelToy");
         MaxHealth = 10;
-        DreamEssenceDrop = 10;
+        DreamEssenceDrop = 2;
         SoulEssenceDrop = 0;
         HumanSoulDrop = 0;
         base.Initialize();

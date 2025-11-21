@@ -12,7 +12,7 @@ public class SandCastle : BaseObject
     {
         Debug.Log("Initializing SandCastle");
         MaxHealth = 30;
-        DreamEssenceDrop = 25;
+        DreamEssenceDrop = 5;
         SoulEssenceDrop = 0;
         HumanSoulDrop = 0;
         base.Initialize();

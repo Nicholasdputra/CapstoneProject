@@ -12,7 +12,7 @@ public class Knife : BaseObject
     {
         Debug.Log("Initializing Knife");
         MaxHealth = 100;
-        DreamEssenceDrop = 70;
+        DreamEssenceDrop = 15;
         SoulEssenceDrop = 0;
         HumanSoulDrop = 0;
         base.Initialize();

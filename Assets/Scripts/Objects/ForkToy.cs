@@ -12,7 +12,7 @@ public class ForkToy : BaseObject
     {
         // Debug.Log("Initializing ForkToy");
         MaxHealth = 5;
-        DreamEssenceDrop = 5;
+        DreamEssenceDrop = 1;
         SoulEssenceDrop = 0;
         HumanSoulDrop = 0;
         base.Initialize();

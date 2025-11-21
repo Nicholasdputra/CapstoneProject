@@ -12,7 +12,7 @@ public class PaperCrown : BaseObject
     {
         Debug.Log("Initializing PaperCrown");
         MaxHealth = 60;
-        DreamEssenceDrop = 50;
+        DreamEssenceDrop = 10;
         SoulEssenceDrop = 0;
         HumanSoulDrop = 0;
         base.Initialize();
