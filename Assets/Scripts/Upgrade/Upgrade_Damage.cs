@@ -21,81 +21,81 @@ public class Upgrade_Damage : BaseUpgrade
             case 0:
                 upgradeName = "Damage I";
                 damageIncrease = 2;
-                dreamEssenceCostToNextTier = 5;
+                dreamEssenceCostToNextTier = 20;
                 break;
             case 1:
                 upgradeName = "Damage I";
                 damageIncrease = 4;
-                dreamEssenceCostToNextTier = 6;
+                dreamEssenceCostToNextTier = 25;
                 break;
             case 2:
                 upgradeName = "Damage I";
                 damageIncrease = 6;
-                dreamEssenceCostToNextTier = 9;
+                dreamEssenceCostToNextTier = 45;
                 break;
             case 3:
                 upgradeName = "Damage I";
                 damageIncrease = 8;
-                dreamEssenceCostToNextTier = 15;
+                dreamEssenceCostToNextTier = 100;
                 break;
             case 4:
                 upgradeName = "Damage I";
                 damageIncrease = 10;
-                dreamEssenceCostToNextTier = 31;
+                dreamEssenceCostToNextTier = 275;
                 break;
             case 5:
                 upgradeName = "Damage II";
-                damageIncrease = 15;
-                dreamEssenceCostToNextTier = 35;
+                damageIncrease = 13;
+                dreamEssenceCostToNextTier = 400;
                 break;
             case 6:
                 upgradeName = "Damage II";
-                damageIncrease = 20;
-                dreamEssenceCostToNextTier = 42;
+                damageIncrease = 16;
+                dreamEssenceCostToNextTier = 520;
                 break;
             case 7:
                 upgradeName = "Damage II";
-                damageIncrease = 25;
-                dreamEssenceCostToNextTier = 60;
+                damageIncrease = 19;
+                dreamEssenceCostToNextTier = 880;
                 break;
             case 8:
                 upgradeName = "Damage II";
-                damageIncrease = 30;
-                dreamEssenceCostToNextTier = 105;
+                damageIncrease = 21;
+                dreamEssenceCostToNextTier = 1900;
                 break;
             case 9:
                 upgradeName = "Damage II";
-                damageIncrease = 35;
-                dreamEssenceCostToNextTier = 217;
+                damageIncrease = 24;
+                dreamEssenceCostToNextTier = 5500;
                 break;
             case 10:
                 upgradeName = "Damage III";
-                damageIncrease = 43;
-                dreamEssenceCostToNextTier = 220;
+                damageIncrease = 29;
+                dreamEssenceCostToNextTier = 8000;
                 break;
             case 11:
                 upgradeName = "Damage III";
-                damageIncrease = 51;
-                dreamEssenceCostToNextTier = 264;
+                damageIncrease = 34;
+                dreamEssenceCostToNextTier = 10400;
                 break;
             case 12:
                 upgradeName = "Damage III";
-                damageIncrease = 59;
-                dreamEssenceCostToNextTier = 380;
+                damageIncrease = 39;
+                dreamEssenceCostToNextTier = 17500;
                 break;
             case 13:
                 upgradeName = "Damage III";
-                damageIncrease = 67;
-                dreamEssenceCostToNextTier = 657;
+                damageIncrease = 44;
+                dreamEssenceCostToNextTier = 38600;
                 break;
             case 14:
                 upgradeName = "Damage III";
-                damageIncrease = 75;
-                dreamEssenceCostToNextTier = 1362;
+                damageIncrease = 49;
+                dreamEssenceCostToNextTier = 110300;
                 break;
             default:
                 upgradeName = "Damage III";
-                damageIncrease = 75;
+                damageIncrease = 49;
                 dreamEssenceCostToNextTier = -1;
                 break;
         }

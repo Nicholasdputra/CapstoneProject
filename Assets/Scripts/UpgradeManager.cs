@@ -97,6 +97,9 @@ public class UpgradeManager : MonoBehaviour
         AudioManager.Instance.PlaySFXOnce(5);
         PlayerDataManager.Instance.SaveUpgrades();  // << SAVE AFTER UPGRADING
 
+        //update text ui
+        ShopManager.Instance.UpdateCurrencyUI();
+
         Debug.Log($"Upgraded {id} to tier {up.upgradeTier}!");
 
         return true;

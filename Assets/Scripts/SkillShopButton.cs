@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class SkillShopButton : MonoBehaviour
+public class SkillShopButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [Header("Link")]
     public string skillID; // fill manually
@@ -11,6 +12,7 @@ public class SkillShopButton : MonoBehaviour
     public Button unlockButton;
     public Button lockButton;
     public GameObject inGameSkillButton;
+    public GameObject hoverPanel;
 
     void Start()
     {
@@ -48,6 +50,12 @@ public class SkillShopButton : MonoBehaviour
 
         if (lockButton != null)
             lockButton.onClick.AddListener(OnLockPressed);
+
+        // 5. auto fine the hover panel
+        hoverPanel = transform.Find("Description")?.gameObject;
+
+        if (hoverPanel != null)
+            hoverPanel.SetActive(false);
     }
 
     public void OnUnlockPressed()
@@ -97,5 +105,18 @@ public class SkillShopButton : MonoBehaviour
         if (inGameSkillButton != null)
             inGameSkillButton.SetActive(isUnlocked);
     }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (hoverPanel != null)
+            hoverPanel.SetActive(true);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (hoverPanel != null)
+            hoverPanel.SetActive(false);
+    }
+
 
 }

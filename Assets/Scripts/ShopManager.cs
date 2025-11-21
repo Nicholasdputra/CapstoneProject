@@ -67,13 +67,28 @@ public class ShopManager : MonoBehaviour
             // Debug.Log("Found: " + humanSoulText);
         }
         ShopCanvas.SetActive(true);
+
         dreamEssenceText.text = PlayerDataManager.Instance.DreamEssence.ToString();
         soulEssenceText.text = PlayerDataManager.Instance.SoulEssence.ToString();
         humanSoulText.text = PlayerDataManager.Instance.HumanSoul.ToString();
+
         SkillManager.Instance.skillSlotsText = ShopCanvas.transform.Find("SellActiveSkills")?.Find("SkillPoints").GetComponentInChildren<TextMeshProUGUI>();
         Debug.Log("Skill Slots Text: " + SkillManager.Instance.skillSlotsText);
         SkillManager.Instance.UpdateSkillSlotsUI();
     }
+
+    public void UpdateCurrencyUI()
+    {
+        if (dreamEssenceText != null)
+            dreamEssenceText.text = PlayerDataManager.Instance.DreamEssence.ToString();
+
+        if (soulEssenceText != null)
+            soulEssenceText.text = PlayerDataManager.Instance.SoulEssence.ToString();
+
+        if (humanSoulText != null)
+            humanSoulText.text = PlayerDataManager.Instance.HumanSoul.ToString();
+    }
+
 
     public void CloseShop()
     {
