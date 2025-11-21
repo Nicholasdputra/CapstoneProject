@@ -39,6 +39,7 @@ public class PlayerSave
     public int soulEssence;
     public int humanSoul;
 
+    [ContextMenu("Reset Data")]
     public void ResetData()
     {
         islandState = IslandState.HarvestPhase;
@@ -62,10 +63,12 @@ public class PlayerSave
         baseAutoCleanSpeed = 1f;
         baseHarvestRadius = 0;
         baseDreamEssenceDropIncrease = 0;
+        PlayerDataManager.Instance.CopyValuesToRuntimeVariables();
     }
 
     public void RefreshFromRuntime()
     {
+        Debug.Log("Refreshing PlayerSave from runtime variables.");
         // Update currencies from PlayerDataManager
         dreamEssence = PlayerDataManager.Instance.DreamEssence;
         soulEssence = PlayerDataManager.Instance.SoulEssence;
@@ -503,14 +506,14 @@ public class PlayerDataManager : MonoBehaviour
     public void RecalculateFinalStats()
     {
         // Set all the variables that start with current to their base values
-        Debug.Log("Base Dream Essence Drop Increase: " + baseDreamEssenceDropIncrease);
+        // Debug.Log("Base Dream Essence Drop Increase: " + baseDreamEssenceDropIncrease);
         currentDreamEssenceDropIncrease = baseDreamEssenceDropIncrease;
-        Debug.Log("Current Dream Essence Drop Increase reset to base: " + baseDreamEssenceDropIncrease);
+        // Debug.Log("Current Dream Essence Drop Increase reset to base: " + baseDreamEssenceDropIncrease);
         
-        Debug.Log("base Harvest Radius: " + baseHarvestRadius); 
+        // Debug.Log("base Harvest Radius: " + baseHarvestRadius); 
         currentHarvestRadius = baseHarvestRadius;
-        Debug.Log("Current Harvest Radius reset to base: " + baseHarvestRadius);
-        Debug.Log("Base Damage Per Click: " + BaseDamagePerClick);
+        // Debug.Log("Current Harvest Radius reset to base: " + baseHarvestRadius);
+        // Debug.Log("Base Damage Per Click: " + BaseDamagePerClick);
 
         currentDamagePerClick = baseDamagePerClick;
         
@@ -623,12 +626,15 @@ public class PlayerDataManager : MonoBehaviour
     public void Initialize()
     {
         playerHUD = FindObjectOfType<PlayerHUD>();
+        ResetPlayerData();
+        ClearAllPlayerPrefs();
         LoadFromJson();
     }
 
     public void LoadFromJson()
     {
         string filePath = Application.persistentDataPath + "/playerSave.json";
+        Debug.Log("Loading Player Data from JSON, filepath: " + filePath);
 
         if (System.IO.File.Exists(filePath))
         {
@@ -644,8 +650,9 @@ public class PlayerDataManager : MonoBehaviour
         CopyValuesToRuntimeVariables();
     }
 
-    void CopyValuesToRuntimeVariables()
+    public void CopyValuesToRuntimeVariables()
     {
+        Debug.Log("Copying PlayerSave values to runtime variables.");
         DreamEssence = currentPlayerSave.dreamEssence;
         SoulEssence = currentPlayerSave.soulEssence;
         HumanSoul = currentPlayerSave.humanSoul;
@@ -675,8 +682,8 @@ public class PlayerDataManager : MonoBehaviour
             activeSkillMultipliers[entry.skillID] = Mathf.Max(0f, entry.multiplier);
         }
 
-        IslandManager.Instance.currentState = currentPlayerSave.islandState;
-        IslandManager.Instance.CurrentIslandIndex = currentPlayerSave.currentIslandIndex;
+        // IslandManager.Instance.currentState = currentPlayerSave.islandState;
+        // IslandManager.Instance.CurrentIslandIndex = currentPlayerSave.currentIslandIndex;
 
         // if (currentPlayerSave.ownedUpgradeIDs == null)
         // {
@@ -704,6 +711,7 @@ public class PlayerDataManager : MonoBehaviour
 
     public void LoadUpgrades()
     {
+        Debug.Log("Loading Upgrades from PlayerPrefs.");
         foreach (var kvp in UpgradeManager.Instance.upgradesDict)
         {
             int savedTier = PlayerPrefs.GetInt(UpgradeManager.SavePrefix + kvp.Key, 0);
@@ -721,6 +729,7 @@ public class PlayerDataManager : MonoBehaviour
 
     public void UpdateCurrentSaveData()
     {
+        Debug.Log("Updating PlayerSave with current runtime variable values.");
         currentPlayerSave.activeSkillMultipliers = new List<SkillMultiplierEntry>();
         currentPlayerSave.RefreshFromRuntime();
 
@@ -738,5 +747,19 @@ public class PlayerDataManager : MonoBehaviour
     {
         string jsonData = JsonUtility.ToJson(currentPlayerSave, true);
         System.IO.File.WriteAllText(Application.persistentDataPath + "/playerSave.json", jsonData);
+    }
+
+    [ContextMenu("Clear All Player Prefs")]
+    public void ClearAllPlayerPrefs()
+    {
+        PlayerPrefs.DeleteAll();
+    }   
+
+    [ContextMenu("Reset Player Data")]
+    public void ResetPlayerData()
+    {
+        currentPlayerSave.ResetData();
+        CopyValuesToRuntimeVariables();
+        SaveToJson();
     }
 }

@@ -73,6 +73,7 @@ public class Upgrade_CriticalChance : BaseUpgrade
                 break;
         }
         pdm.BaseCritChance = criticalChance;
+        // pdm.BaseCritChance = 0;
 
         upgradeDescription = $"Set critical chance for every click to {criticalChance*100}%";
     }

@@ -49,7 +49,7 @@ public class Upgrade_SkillTreeSlot : BaseUpgrade
                 dreamEssenceCostToNextTier = -1;
                 break;
         }
-        sm.maxSkillTreeSlots = 2+addedSkillTreeSlots;
+        sm.maxSkillTreeSlots = 2 + addedSkillTreeSlots;
         upgradeDescription = $"Set max skill tree slots to {sm.maxSkillTreeSlots}";
     }
 }

@@ -18,6 +18,7 @@ public class WaveManager : MonoBehaviour
     [Header("Events")]
     [Header("Listening")]
     public VoidEventChannel OnIslandReadyForWave;
+    public VoidEventChannel OnIslandRepeatWave;
     [Header("Broadcasting")]
     public VoidEventChannel OnWaveCompleted;
     #endregion
@@ -42,12 +43,14 @@ public class WaveManager : MonoBehaviour
 
     void OnEnable()
     {
-        OnIslandReadyForWave.OnEventRaised += SpawnNextWave;    
+        OnIslandReadyForWave.OnEventRaised += SpawnNextWave;
+        OnIslandRepeatWave.OnEventRaised += RepeatSameWave;  
     }
 
     private void OnDisable()
     {
         OnIslandReadyForWave.OnEventRaised -= SpawnNextWave;
+        OnIslandRepeatWave.OnEventRaised -= RepeatSameWave;
     }
 
     private void SpawnNextWave()
@@ -62,6 +65,11 @@ public class WaveManager : MonoBehaviour
         {
             StartWave(currentWaveData.waveNumber + 1);
         }
+    }
+
+    private void RepeatSameWave()
+    {
+        StartWave(currentWaveData.waveNumber);
     }
     
     void Start()

@@ -71,7 +71,7 @@ public class ModifiedAudioClips
 
     private IEnumerator PlayClipCoroutine(int repeatCount)
     {
-        Debug.Log("ModifiedAudioClips: Starting PlayClipCoroutine for clip: " + clip.name);
+        // Debug.Log("ModifiedAudioClips: Starting PlayClipCoroutine for clip: " + clip.name);
         // Check to see if the audiosource it wants to play from exists and check to see if the clip exists
         if (clip == null || audioSource == null)
         {
@@ -100,7 +100,7 @@ public class ModifiedAudioClips
         int playedTimes = 0;        
         while (repeatCount == -1 || playedTimes < repeatCount) // -1 means infinite loop
         {
-            Debug.Log("ModifiedAudioClips: Playing clip: " + clip.name + " (Play count: " + (playedTimes + 1) + ")");
+            // Debug.Log("ModifiedAudioClips: Playing clip: " + clip.name + " (Play count: " + (playedTimes + 1) + ")");
             // Set the clip and volume
             audioSource.clip = clip;
 
@@ -239,8 +239,8 @@ public class AudioManager : MonoBehaviour
         {
             Debug.LogWarning("Audio source is null for clip: " + clip.clip.name);
         }
-        Debug.Log("Determined volume for clip " + clip.clip.name + ": " + finalVolume);
-        Debug.Log("Sfx Volume Pref: " + PlayerPrefs.GetFloat(SFX_VOLUME_KEY, 1.0f) + ", BGM Volume Pref: " + PlayerPrefs.GetFloat(BGM_VOLUME_KEY, 1.0f));
+        // Debug.Log("Determined volume for clip " + clip.clip.name + ": " + finalVolume);
+        // Debug.Log("Sfx Volume Pref: " + PlayerPrefs.GetFloat(SFX_VOLUME_KEY, 1.0f) + ", BGM Volume Pref: " + PlayerPrefs.GetFloat(BGM_VOLUME_KEY, 1.0f));
     }
 
     // Play a BGM clip once
@@ -297,13 +297,13 @@ public class AudioManager : MonoBehaviour
         if (index >= 0 && index < sfxClips.Length)
         {
             DetermineVolume(sfxClips[index]);
-            Debug.Log("Playing SFX clip: " + sfxClips[index].clip.name);
+            // Debug.Log("Playing SFX clip: " + sfxClips[index].clip.name);
             sfxClips[index].PlayOnce();
         }
         else
         {
-            Debug.LogWarning("SFX index out of range: " + index);
-            Debug.LogWarning("Available SFX clips count: " + sfxClips.Length);
+            // Debug.LogWarning("SFX index out of range: " + index);
+            // Debug.LogWarning("Available SFX clips count: " + sfxClips.Length);
         }
     }
 

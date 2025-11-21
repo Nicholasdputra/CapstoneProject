@@ -43,6 +43,7 @@ public class IslandManager : MonoBehaviour
     [Header("Broadcasting")]
     public VoidEventChannel OnIslandReadyForWave;
     public VoidEventChannel OnIslandReadyForMiniboss;
+    public VoidEventChannel OnIslandRepeatWave;
     public VoidEventChannel OnIslandReadyForBoss;
 
     #endregion
@@ -80,7 +81,7 @@ public class IslandManager : MonoBehaviour
         OnWaveCompleted.OnEventRaised += HandleWaveStateCompleted;
         OnMinibossCompleted.OnEventRaised += HandleMinibossStateCompleted;
         OnBossCompleted.OnEventRaised += HandleBossStateCompleted;
-        OnMinibossFailed.OnEventRaised += HandleMinibossStateCompleted;
+        OnMinibossFailed.OnEventRaised += HandleMinibossStateFailed;
         OnBossFailed.OnEventRaised += HandleBossStateCompleted;
     }
 
@@ -91,7 +92,7 @@ public class IslandManager : MonoBehaviour
         OnWaveCompleted.OnEventRaised -= HandleWaveStateCompleted;
         OnMinibossCompleted.OnEventRaised -= HandleMinibossStateCompleted;
         OnBossCompleted.OnEventRaised -= HandleBossStateCompleted;
-        OnMinibossFailed.OnEventRaised -= HandleMinibossStateCompleted;
+        OnMinibossFailed.OnEventRaised -= HandleMinibossStateFailed;
         OnBossFailed.OnEventRaised -= HandleBossStateCompleted;
     }
 
@@ -121,11 +122,12 @@ public class IslandManager : MonoBehaviour
             currentState = IslandState.BossPhase;
         }
 
-        CheckandImplementPhase();
+        CheckandImplementPhase(1);
     }
 
     private void HandleMinibossStateCompleted(int minibossWaveNumber)
     {
+        Debug.Log("Miniboss wave number: " + minibossWaveNumber);
         // Logic to determine next island state based on miniboss completion
         if (currentState == IslandState.MinibossPhase)
         {
@@ -139,7 +141,26 @@ public class IslandManager : MonoBehaviour
             }
         }
         
-        CheckandImplementPhase();
+        CheckandImplementPhase(1);
+    }
+
+    private void HandleMinibossStateFailed(int minibossWaveNumber)
+    {
+        Debug.Log("Miniboss wave number: " + minibossWaveNumber);
+        // Logic to determine next island state based on miniboss completion
+        if (currentState == IslandState.MinibossPhase)
+        {
+            if (minibossWaveNumber >= WaveManager.MAXWAVESPERISLAND)
+            {
+                currentState = IslandState.BossPhase;
+            }
+            else
+            {
+                currentState = IslandState.HarvestPhase;
+            }
+        }
+
+        CheckandImplementPhase(0);
     }
     
     private void HandleBossStateCompleted(int waveNumber)
@@ -151,8 +172,10 @@ public class IslandManager : MonoBehaviour
             CurrentIslandIndex += 1;
             currentState = IslandState.HarvestPhase;
         }
-        CheckandImplementPhase();
+        CheckandImplementPhase(1);
     }
+
+    
 
     private void CheckIfCanAdjustIsland()
     {
@@ -160,11 +183,11 @@ public class IslandManager : MonoBehaviour
         {
             // ReadyToAdjustIsland = true;
             // ReadyForIslandAdjustment.RaiseEvent();
-            CheckandImplementPhase();
+            CheckandImplementPhase(1);
         }
     }
 
-    public void CheckandImplementPhase()
+    public void CheckandImplementPhase(int succeeded)
     {
         Debug.Log("Implementing Island Phase: " + currentState.ToString());
         if (currentState == IslandState.HarvestPhase)
@@ -175,9 +198,15 @@ public class IslandManager : MonoBehaviour
             // Clear grid occupied positions from previous phases if needed
             
             gridManager = GameObject.FindObjectOfType<GridManager>();
-            
             gridManager.ClearAllOccupiedPositions();
-            OnIslandReadyForWave.RaiseEvent();
+            if(succeeded == 1)
+            {
+                OnIslandReadyForWave.RaiseEvent();
+            }
+            else if(succeeded == 0)
+            {
+                OnIslandRepeatWave.RaiseEvent();
+            }
         }
         else if (currentState == IslandState.MinibossPhase)
         {

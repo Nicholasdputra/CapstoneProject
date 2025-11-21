@@ -39,6 +39,7 @@ public class PlayerHUD : MonoBehaviour
         SoulEssenceChangedEvent.OnEventRaised += UpdateSoulEssence;
         HumanSoulChangedEvent.OnEventRaised += UpdateHumanSoul;
         WaveChangedEvent.OnEventRaised += UpdateWave;
+        RefreshInGameUIs();
     }
 
     private void OnDisable()
@@ -68,10 +69,10 @@ public class PlayerHUD : MonoBehaviour
     {
         if (WaveManager.Instance.currentWaveData == null)
         {
-            waveText.text = "Wave 0 / " + WaveManager.MAXWAVESPERISLAND.ToString();
+            waveText.text = "Chapter 0 / " + WaveManager.MAXWAVESPERISLAND.ToString();
             return;
         } 
-        waveText.text = "Wave " + WaveManager.Instance.currentWaveData.waveNumber.ToString() + " / " + WaveManager.MAXWAVESPERISLAND.ToString();
+        waveText.text = "Chapter " + WaveManager.Instance.currentWaveData.waveNumber.ToString() + " / " + WaveManager.MAXWAVESPERISLAND.ToString();
     }
 
     public void CallShowDamageNumber(Vector3 position, int damageAmount)
@@ -135,4 +136,10 @@ public class PlayerHUD : MonoBehaviour
         Destroy(warningTextObj);
     }
 
+    public void RefreshInGameUIs()
+    {
+        UpdateDreamEssence(PlayerDataManager.Instance.DreamEssence);
+        UpdateSoulEssence(PlayerDataManager.Instance.SoulEssence);
+        UpdateHumanSoul(PlayerDataManager.Instance.HumanSoul);
+    }
 }

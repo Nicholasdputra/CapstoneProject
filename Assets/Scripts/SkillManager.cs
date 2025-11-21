@@ -90,7 +90,7 @@ public class SkillManager : MonoBehaviour
         // includeInactive = true ensures components on disabled GameObjects are found
         BaseSkill[] skillsInScene = skillButtons.GetComponentsInChildren<BaseSkill>(true);
         skillObjectsInScene.AddRange(skillsInScene);
-        Debug.Log($"SkillManager: Found {skillsInScene.Length} BaseSkill components in scene.");
+        // Debug.Log($"SkillManager: Found {skillsInScene.Length} BaseSkill components in scene.");
     }
 
 

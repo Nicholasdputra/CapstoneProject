@@ -162,7 +162,9 @@ public class BaseMiniboss : ClickableEntity
         timerBarObject.SetActive(false);
 
         //Time's up, handle miniboss failure in wave manager
-        MinibossManager.Instance.OnMinibossFailed.RaiseEvent(WaveManager.Instance.currentWaveData.waveNumber - 2);
+        int nextWave = WaveManager.Instance.currentWaveData.waveNumber - 1;
+        Debug.Log("Next wave: " + nextWave);
+        MinibossManager.Instance.OnMinibossFailed.RaiseEvent(nextWave);
         FailedMiniboss();
     }
     
@@ -238,7 +240,9 @@ public class BaseMiniboss : ClickableEntity
             timerBarObject.SetActive(false);
             
             // Show Dialogue on top here
-            MinibossManager.Instance.OnMinibossCompleted.RaiseEvent(WaveManager.Instance.currentWaveData.waveNumber);
+            int nextWave = WaveManager.Instance.currentWaveData.waveNumber - 1;
+            Debug.Log("Next wave: " + nextWave);
+            MinibossManager.Instance.OnMinibossCompleted.RaiseEvent(nextWave);
             IslandManager.Instance.DisplayDialogue(dialogue, dialogueText, dialogueObject);
             Destroy(gameObject);
             

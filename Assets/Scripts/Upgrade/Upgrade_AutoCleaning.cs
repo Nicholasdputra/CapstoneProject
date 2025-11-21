@@ -97,7 +97,7 @@ public class Upgrade_AutoCleaning : BaseUpgrade
                 dreamEssenceCostToNextTier = -1;
                 break;
         }
-        pdm.BaseAutoCleaningDamage = 1 + (int)autoDamage;
+        pdm.BaseAutoCleaningDamage = 1 + (int) autoDamage;
 
         if (upgradeTier < 6)
         {

@@ -52,7 +52,7 @@ public abstract class BaseObject : ClickableEntity
         {
             return;
         }
-
+        
         CurrentHealth -= CalculateClickDamage();
         PlayerDataManager.Instance.playerHUD.CallShowDamageNumber(transform.position + Vector3.up * YOffset, CalculateClickDamage());
     }

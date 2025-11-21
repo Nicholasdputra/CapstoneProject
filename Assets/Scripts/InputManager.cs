@@ -56,7 +56,29 @@ public class InputManager : MonoBehaviour
         AudioManager.Instance.PlaySFXOnce(1);
         if (!Input.GetMouseButtonDown(0))
             return;
-        Debug.Log("Mouse Click Detected");
+
+        // raycast everything to check what it's hitting
+        // if (cam == null) cam = Camera.main;
+        // if (cam == null) return;
+        // Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        // RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity, ~excludedLayers);
+        // if (hits == null || hits.Length == 0)
+        // {
+        //     Debug.Log("Click: nothing hit");
+        //     return;
+        // }
+        // System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+        // Debug.Log($"Click: {hits.Length} hit(s)");
+        // for (int i = 0; i < hits.Length; i++)
+        // {
+        //     var h = hits[i];
+        //     string colliderName = h.collider != null ? h.collider.name : "null";
+        //     string tag = h.collider != null ? h.collider.tag : "null";
+        //     Debug.Log($"Hit[{i}] distance={h.distance:F2} collider={colliderName} tag={tag} point={h.point}");
+        // }
+        // --------
+
+        // Debug.Log("Mouse Click Detected");
         Vector2Int? hoveredGrid = GetHoveredGridCell();
         // Debug.Log("Clicked at grid: " + (hoveredGrid.HasValue ? hoveredGrid.Value.ToString() : "null"));
         if (hoveredGrid == null)
@@ -64,12 +86,12 @@ public class InputManager : MonoBehaviour
             return;
         }
         int radius = PlayerDataManager.Instance.currentHarvestRadius;
-        Debug.Log("Click radius: " + radius);
+        // Debug.Log("Click radius: " + radius);
         List<ClickableEntity> entities = GetEntitiesInRadius(hoveredGrid.Value, radius);
-        Debug.Log("Entities list members: " + string.Join(", ", entities));
+        // Debug.Log("Entities list members: " + string.Join(", ", entities));
         foreach (var entity in entities)
         {
-            Debug.Log("Clicking on entity: " + entity.name);
+            // Debug.Log("Clicking on entity: " + entity.name);
             entity.OnClick(); // Call the click event
         }
     }

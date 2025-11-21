@@ -15,13 +15,14 @@ public class UpgradeShopButton : MonoBehaviour
     [Header("UI")]
     public TextMeshProUGUI upgradeTitleText;
     public TextMeshProUGUI upgradeDescriptionText; 
-    public TextMeshProUGUI upgradeStageText;      // was "Stage"
+    public TextMeshProUGUI upgradeStageText;
     public TextMeshProUGUI upgradeCostText;
     public Button upgradeButton;
     public TextMeshProUGUI buttonText;
 
-    void Start()
+    void OnEnable()
     {
+        Debug.Log($"{name} OnEnable called");
         Initialize();
     }
 
@@ -48,6 +49,17 @@ public class UpgradeShopButton : MonoBehaviour
         {
             buttonText = upgradeButton.transform.Find("DreamEssenceCost")?.GetComponent<TextMeshProUGUI>();
         } 
+
+        Debug.Log("Adding listener to upgrade button");
+        if(upgradeButton != null)
+        {
+            // add listener once
+            Debug.Log("Adding listener to upgrade button");
+            upgradeButton.onClick.RemoveAllListeners();
+            upgradeButton.onClick.AddListener(TryBuying); 
+            // Debug.Log("Runtime listener count: " + upgradeButton.onClick.GetInvocationList().Length);
+        }
+
         if (upgradeCostText == null)
         {
             upgradeCostText = transform.Find("Cost")?.GetComponent<TextMeshProUGUI>();
@@ -76,12 +88,6 @@ public class UpgradeShopButton : MonoBehaviour
         }
 
         // add listener once
-        if (upgradeButton != null)
-        {
-            upgradeButton.onClick.RemoveAllListeners();
-            upgradeButton.onClick.AddListener(TryBuying);
-        }
-
         RefreshUI();
     }
 
@@ -119,7 +125,14 @@ public class UpgradeShopButton : MonoBehaviour
             if (upgradeButton != null)
             {
                 upgradeButton.interactable = false;
-            } 
+            }
+
+            if(upgradeButton != null)
+            {
+                // remove listener
+                upgradeButton.onClick.RemoveAllListeners();
+                Debug.Log($"Listeners for {upgradeButton.name}: {upgradeButton.onClick.GetPersistentEventCount()}");
+            }
         }
         else
         {
@@ -133,6 +146,17 @@ public class UpgradeShopButton : MonoBehaviour
             {
                 buttonText.text = linkedUpgrade.dreamEssenceCostToNextTier.ToString();
             } 
+
+            Debug.Log("Adding listener to upgrade button");
+            if(upgradeButton != null)
+            {
+                // add listener once
+                Debug.Log("Adding listener to upgrade button");
+                upgradeButton.onClick.RemoveAllListeners();
+                upgradeButton.onClick.AddListener(TryBuying); 
+                // List the listeners
+                Debug.Log($"Listeners for {upgradeButton.name}: {upgradeButton.onClick.GetPersistentEventCount()}");
+            }
 
             // Interactable depends on player's currency and skill slots
             if (upgradeButton != null)
@@ -153,8 +177,11 @@ public class UpgradeShopButton : MonoBehaviour
 
     public void TryBuying()
     {
-        if (linkedUpgrade == null) return;
-
+        if (linkedUpgrade == null)
+        {
+            return;
+        } 
+        
         // Use UpgradeManager to handle validation, cost, saving, etc.
         bool success = UpgradeManager.Instance.TryUpgrade(upgradeID);
 
