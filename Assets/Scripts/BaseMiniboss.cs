@@ -243,7 +243,15 @@ public class BaseMiniboss : ClickableEntity
             int nextWave = WaveManager.Instance.currentWaveData.waveNumber - 1;
             Debug.Log("Next wave: " + nextWave);
             MinibossManager.Instance.OnMinibossCompleted.RaiseEvent(nextWave);
-            IslandManager.Instance.DisplayDialogue(dialogue, dialogueText, dialogueObject);
+
+            if (!string.IsNullOrEmpty(dialogue))
+            {
+                dialogueObject.SetActive(true);
+                IslandManager.Instance.DisplayDialogue(dialogue, dialogueText, dialogueObject);
+            }
+
+            //IslandManager.Instance.DisplayDialogue(dialogue, dialogueText, dialogueObject);
+            
             Destroy(gameObject);
             
             // Can add effects here too
